@@ -1,17 +1,47 @@
-import { Service } from '@angular/core';
+import { Service, inject, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '../../../environment';
-import { Survey, Question, Option } from '../interfaces/survey';
+import { Survey, Question, Answer, SurveyDB, QuestionWithAnswer } from '../interfaces/survey';
 
 @Service()
 export class SurveyService {
   supabase = createClient(env.supabase_url, env.supabase_key);
+  private route = inject(ActivatedRoute);
 
-  surveys: Survey[] = [];
+  currentSurveyId: string | null;
+  currentSurvey = signal<Survey>({
+    title: '',
+    description: '',
+    category: 'Everyday Life',
+    end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  });
 
-  categories: string[] = ['Technology & Future', 'Everyday Life', 'Society & Politics'];
+  currentQuestions = signal<QuestionWithAnswer[]>([
+    {
+      question: '',
+      allowMultipleAnswers: false,
+      surveyId: 0,
+      answers: [],
+      id: 0,
+      created_at: '',
+    },
+  ]);
+
+  currentAnswers = signal<Answer[]>([
+    {
+      text: 'string',
+      selected: false,
+      questionId: 0,
+    },
+  ]);
 
   constructor() {
+    this.currentSurveyId = this.route.snapshot.paramMap.get('surveyId');
+
+    // console.log(this.currentSurvey);
+
+    this.getSurvey(5);
     // this.insertSurvey(this.survey1);
     // this.insertQuestions(this.questions1);
     // this.insertOptions(this.optionsQuestion1);
@@ -19,6 +49,60 @@ export class SurveyService {
     // this.insertOptions(this.optionsQuestion3);
     // this.insertOptions(this.optionsQuestion4);
     // this.deleteOptions();
+  }
+
+  async getSurvey(surveyId: number) {
+    const { data, error } = await this.supabase
+      .from('surveys')
+      .select('*')
+      .eq('id', surveyId)
+      .single();
+    this.currentSurvey.set(data);
+    this.getQuestions(data);
+  }
+
+  async getQuestions(survey: SurveyDB) {
+    const { data, error } = await this.supabase
+      .from('questions')
+      .select('*')
+      .eq('surveyId', survey.id);
+
+    if (data) {
+      const questionsWithAnswers: QuestionWithAnswer[] = data.map((question: any) => ({
+        ...question,
+        answers: [],
+      }));
+
+      this.currentQuestions.set(questionsWithAnswers);
+    }
+
+    this.getAnswersf();
+  }
+
+  async getAnswersf() {
+    const questions = this.currentQuestions();
+
+    const updatedQuestions = await Promise.all(
+      questions.map(async (question) => {
+        const answers = await this.getAnswers(question);
+        return {
+          ...question,
+          answers: answers,
+        };
+      }),
+    );
+
+    this.currentQuestions.set(updatedQuestions);
+    console.log(this.currentQuestions());
+  }
+
+  async getAnswers(question: QuestionWithAnswer) {
+    const { data, error } = await this.supabase
+      .from('answers')
+      .select('*')
+      .eq('questionId', question.id);
+
+    return data ?? [];
   }
 
   async deleteOptions() {
@@ -37,71 +121,11 @@ export class SurveyService {
     const response = await this.supabase.from('questions').insert([question]).select();
   }
 
-  insertOptions(options: Option[]) {
-    options.forEach((option) => this.insertOption(option));
+  insertOptions(answers: Answer[]) {
+    answers.forEach((answer) => this.insertOption(answer));
   }
 
-  async insertOption(option: Option) {
-    const response = await this.supabase.from('options').insert([option]).select();
+  async insertOption(answer: Answer) {
+    const response = await this.supabase.from('answers').insert([answer]).select();
   }
-
-  survey1: Survey = {
-    title: 'Getting Around',
-    category: 'Everyday Life',
-    description:
-      'How do people get around in their everyday lives, and what influences their choice of transportation?',
-    end_date: new Date('2026-09-30'),
-  };
-
-  questions1: Question[] = [
-    {
-      question: 'What is your main way of getting around in everyday life?',
-      allowMultipleAnswers: false,
-      surveyId: 6,
-    },
-    {
-      question: 'What matters most to you when choosing how to travel?',
-      allowMultipleAnswers: false,
-      surveyId: 6,
-    },
-    {
-      question: 'What would make you use public transport more often?',
-      allowMultipleAnswers: false,
-      surveyId: 6,
-    },
-    {
-      question: 'For a journey of around 5 km, which option would you prefer?',
-      allowMultipleAnswers: false,
-      surveyId: 6,
-    },
-  ];
-
-  optionsQuestion1: Option[] = [
-    { text: 'Car', selected: false, questionId: 5 },
-    { text: 'Public transport', selected: false, questionId: 5 },
-    { text: 'Bicycle', selected: false, questionId: 5 },
-    { text: 'Walking', selected: false, questionId: 5 },
-  ];
-
-  optionsQuestion2: Option[] = [
-    { text: 'Price', selected: false, questionId: 6 },
-    { text: 'Travel time', selected: false, questionId: 6 },
-    { text: 'Convenience', selected: false, questionId: 6 },
-    { text: 'Environmental impact', selected: false, questionId: 6 },
-  ];
-
-  optionsQuestion3: Option[] = [
-    { text: 'Lower prices', selected: false, questionId: 7 },
-    { text: 'More frequent connections', selected: false, questionId: 7 },
-    { text: 'Better reliability', selected: false, questionId: 7 },
-    { text: 'Better connections to my destination', selected: false, questionId: 7 },
-    { text: 'Nothing', selected: false, questionId: 7 },
-  ];
-
-  optionsQuestion4: Option[] = [
-    { text: 'Car', selected: false, questionId: 8 },
-    { text: 'Public transport', selected: false, questionId: 8 },
-    { text: 'Bicycle', selected: false, questionId: 8 },
-    { text: 'Walking', selected: false, questionId: 8 },
-  ];
 }

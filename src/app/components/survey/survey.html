@@ -1,1 +1,16 @@
-<article></article>
+<article class="survey">
+  <p class="survey-status survey-status--published">Published</p>
+  <div class="survey__top-infos">
+    <p class="end-date">Ends on {{ survey().end_date | date: 'dd.MM.yyyy' }}</p>
+    <p class="category">Category: {{ survey().category }}</p>
+  </div>
+  <h1 class="survey__title">{{ survey().title }}</h1>
+  <p class="survey__description">{{ survey().description }}</p>
+
+  <form action="">
+    <fieldset>
+      <legend></legend>
+      <p></p>
+    </fieldset>
+  </form>
+</article>

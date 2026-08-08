@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use './app/app.scss';
+@use './app/app.scss' as *;
 
 * {
   margin: 0;
@@ -9,6 +9,7 @@
 
 body {
   font-family: 'Mulish', sans-serif;
+  color: $primary-purple;
 }
 
 a {

@@ -1,4 +1,6 @@
-export interface Option {
+import { categoriesLiteral } from '../literals';
+
+export interface Answer {
   text: string;
   selected: boolean;
   questionId: number;
@@ -10,9 +12,20 @@ export interface Question {
   surveyId: number;
 }
 
+export interface QuestionWithAnswer extends Question {
+  id: number;
+  created_at: string;
+  answers: Answer[];
+}
+
 export interface Survey {
   title: string;
-  category: string;
+  category: categoriesLiteral;
   description: string;
-  end_date: Date;
+  end_date: string;
+}
+
+export interface SurveyDB extends Survey {
+  id: number;
+  created_at: string;
 }
