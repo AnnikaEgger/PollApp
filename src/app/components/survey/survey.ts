@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 @Component({
   selector: 'app-survey',
@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './survey.html',
   styleUrl: './survey.scss',
 })
-export class Survey {}
+export class Survey {
+  constructor() {}
+}

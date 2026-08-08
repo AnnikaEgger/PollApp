@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { SurveyService } from './shared/services/survey';
 import { SurveyWrapper } from './components/survey-wrapper/survey-wrapper';
 
 @Component({
@@ -10,6 +11,8 @@ import { SurveyWrapper } from './components/survey-wrapper/survey-wrapper';
 })
 export class App {
   protected readonly title = signal('pollapp');
+
+  service = inject(SurveyService);
 }
 
 // End date
