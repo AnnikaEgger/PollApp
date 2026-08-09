@@ -1,20 +1,14 @@
-import { categoriesLiteral } from '../../shared/literals';
+import { categoriesLiteral } from '../../shared/literals/literals';
 
 export interface Answer {
   text: string;
-  selected: boolean;
-  questionId: number;
+  voteCount: number;
 }
 
 export interface Question {
   question: string;
   allowMultipleAnswers: boolean;
   surveyId: number;
-}
-
-export interface QuestionWithAnswer extends Question {
-  id: number;
-  created_at: string;
   answers: Answer[];
 }
 

@@ -1,4 +1,4 @@
-@use '../../styles/abstracts/load-abstracts.scss' as *;
+@use '../../../../styles/abstracts/load-abstracts.scss' as *;
 
 .survey {
   @include flex(column, 0, center, flex-start);
@@ -6,10 +6,17 @@
   padding: 40px;
   border-top-right-radius: 160px;
 
-  &__top-infos {
-    @include flex(row, 0, space-between);
-    font-weight: 500;
+  &__top {
+    @include flex(column, 0, center, flex-start);
     width: 100%;
+    padding-bottom: 40px;
+
+    &--date-and-category {
+      @include flex(row, 0, space-between);
+      font-weight: 500;
+      width: 100%;
+      margin-top: 8px;
+    }
   }
 
   &__title {
@@ -20,5 +27,76 @@
 
   &__description {
     font-weight: 500;
+  }
+}
+
+.survey__form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  .complete-btn {
+    padding: 8px 12px;
+    background-color: rgba(255, 183, 112, 0.3);
+    font-weight: 700;
+    font-family: 'Nokora', sans-serif;
+    border-radius: 10px;
+    align-self: flex-end;
+  }
+}
+
+.question {
+  border: none;
+  // @include flex(column, 24px, center, start);
+
+  &__title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+
+  &__more-than-one {
+    font-size: 14px;
+    font-weight: normal;
+  }
+}
+
+.options-wrapper {
+  @include flex(column, 8px, center, start);
+}
+
+.option {
+  @include flex(row, 16px, flex-start, center);
+  line-height: 1;
+
+  &:hover {
+    background-color: rgba(255, 207, 161, 0.4);
+  }
+
+  &__checkbox {
+    cursor: pointer;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+
+    &:not(:checked) {
+      background-image: url('/assets/icons/checkbox-unchecked.svg');
+
+      &:hover {
+        background-image: url('/assets/icons/checkbox-hover.svg');
+      }
+    }
+
+    &:checked {
+      background-image: url('/assets/icons/checkbox-checked.svg');
+    }
+  }
+
+  &__text {
+    font-size: 16px;
+
+    .letter {
+      font-weight: 700;
+    }
   }
 }
