@@ -1,0 +1,33 @@
+<article class="survey">
+  <p class="survey-status survey-status--published">Published</p>
+  <div class="survey__top-infos">
+    <p class="end-date">Ends on {{ survey().end_date | date: 'dd.MM.yyyy' }}</p>
+    <p class="category">Category: {{ survey().category }}</p>
+  </div>
+  <h1 class="survey__title">{{ survey().title }}</h1>
+  <p class="survey__description">{{ survey().description }}</p>
+
+  <form action="">
+    @for (question of questions(); track $index) {
+      <fieldset>
+        <legend>
+          <span>{{ $index + 1 }}</span
+          ><span>{{ question.question }}</span>
+        </legend>
+
+        @if (question.allowMultipleAnswers) {
+          <p>More than one answers are possible.</p>
+        }
+
+        @for (answer of question.answers; track $index) {
+          <div class="answer-wrapper">
+            <input type="checkbox" />
+            <label for="">
+              <span></span> <span> {{ answer.text }}</span></label
+            >
+          </div>
+        }
+      </fieldset>
+    }
+  </form>
+</article>

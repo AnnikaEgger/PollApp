@@ -1,7 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SurveyService } from './shared/services/survey';
-import { SurveyWrapper } from './components/survey-wrapper/survey-wrapper';
+import { SurveyWrapper } from './pages/survey-page/survey-wrapper/survey-wrapper';
 
 @Component({
   selector: 'app-root',

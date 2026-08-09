@@ -1,7 +1,7 @@
 import { Service, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { createClient } from '@supabase/supabase-js';
-import { env } from '../../../environment';
+import { env } from '../../../environments/environment';
 import { Survey, Question, Answer, SurveyDB, QuestionWithAnswer } from '../interfaces/survey';
 
 @Service()
@@ -25,14 +25,6 @@ export class SurveyService {
       answers: [],
       id: 0,
       created_at: '',
-    },
-  ]);
-
-  currentAnswers = signal<Answer[]>([
-    {
-      text: 'string',
-      selected: false,
-      questionId: 0,
     },
   ]);
 

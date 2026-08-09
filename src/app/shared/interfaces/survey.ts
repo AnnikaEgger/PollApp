@@ -1,4 +1,4 @@
-import { categoriesLiteral } from '../literals';
+import { categoriesLiteral } from '../../shared/literals';
 
 export interface Answer {
   text: string;

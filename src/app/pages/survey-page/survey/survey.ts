@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { SurveyService } from '../../shared/services/survey';
+import { SurveyService } from '../../../core/services/survey';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -11,6 +11,7 @@ import { DatePipe } from '@angular/common';
 export class Survey {
   service = inject(SurveyService);
   survey = this.service.currentSurvey;
+  questions = this.service.currentQuestions;
 
   constructor() {}
 }
