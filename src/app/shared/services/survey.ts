@@ -68,4 +68,14 @@ export class SurveyService {
   async insertQuestion(question: Question) {
     const response = await this.supabase.from('questions').insert([question]).select();
   }
+
+  updateAnswers(updatedQuestions: QuestionDB[]) {
+    updatedQuestions.forEach(async (question) => {
+      const { data, error } = await this.supabase
+        .from('questions')
+        .update({ answers: question.answers })
+        .eq('id', question.id)
+        .select();
+    });
+  }
 }

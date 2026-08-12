@@ -99,6 +99,9 @@ export class SurveyForm {
     });
 
     console.log('Daten für die Datenbank:', updatedQuestions);
+    // for (let index = 0; index < updatedQuestions.length; index++) {
+    this.service.updateAnswers(updatedQuestions);
+    // }s
   }
 
   getRadioControl(questionIndex: number): FormControl {
