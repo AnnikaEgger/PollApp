@@ -39,6 +39,8 @@
       </div>
     }
 
-    <button type="submit" class="complete-btn">Complete survey</button>
+    <button [disabled]="surveyForm.invalid" type="submit" class="complete-btn">
+      Complete survey
+    </button>
   </div>
 </form>

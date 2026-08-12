@@ -8,6 +8,11 @@
     font-family: 'Nokora', sans-serif;
     border-radius: 10px;
     align-self: flex-end;
+
+    &:disabled {
+      cursor: not-allowed;
+      background-color: rgba(60, 48, 64, 0.1);
+    }
   }
 
   .questions {

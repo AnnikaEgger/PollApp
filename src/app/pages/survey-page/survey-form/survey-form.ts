@@ -1,6 +1,14 @@
 import { Component, OnInit, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormControl, FormArray } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  FormArray,
+  ValidationErrors,
+  AbstractControl,
+  Validators,
+} from '@angular/forms';
 import { SurveyService } from '../../../shared/services/survey';
 
 @Component({
@@ -20,6 +28,14 @@ export class SurveyForm {
         this.initForm(currentQuestions);
       }
     });
+  }
+
+  minSelectedCheckboxes(min = 1) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const formArray = control as FormArray;
+      const selectedCount = formArray.controls.filter((c) => c.value === true).length;
+      return selectedCount >= min ? null : { required: true };
+    };
   }
 
   get questions() {
@@ -43,13 +59,15 @@ export class SurveyForm {
       questions: new FormArray(
         this.questions.map((question) => {
           if (question.allowMultipleAnswers) {
-            const answersArray = new FormArray(question.answers.map(() => new FormControl(false)));
+            const answersArray = new FormArray(
+              question.answers.map(() => new FormControl(false), this.minSelectedCheckboxes(1)),
+            );
             return new FormGroup({
               answerSelection: answersArray,
             });
           } else {
             return new FormGroup({
-              answerSelection: new FormControl(''),
+              answerSelection: new FormControl('', Validators.required),
             });
           }
         }),
@@ -70,6 +88,11 @@ export class SurveyForm {
   }
 
   onSubmitSurvey() {
+    if (this.surveyForm.invalid) {
+      this.surveyForm.markAllAsTouched();
+      return;
+    }
+
     const formValues = this.surveyForm.value.questions;
 
     const updatedQuestions = this.questions.map((question, qIndex) => {
@@ -99,9 +122,20 @@ export class SurveyForm {
     });
 
     console.log('Daten für die Datenbank:', updatedQuestions);
-    // for (let index = 0; index < updatedQuestions.length; index++) {
     this.service.updateAnswers(updatedQuestions);
-    // }s
+
+    this.questionsFormArray.controls.forEach((questionGroup) => {
+      const answerSelection = questionGroup.get('answerSelection');
+
+      if (answerSelection instanceof FormArray) {
+        answerSelection.controls.forEach((control) => control.setValue(false));
+      } else if (answerSelection instanceof FormControl) {
+        answerSelection.setValue('');
+      }
+    });
+
+    this.surveyForm.markAsPristine();
+    this.surveyForm.markAsUntouched();
   }
 
   getRadioControl(questionIndex: number): FormControl {
