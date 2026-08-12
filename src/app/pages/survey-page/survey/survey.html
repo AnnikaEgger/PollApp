@@ -8,7 +8,7 @@
     <h1 class="survey__title">{{ survey().title }}</h1>
     <p class="survey__description">{{ survey().description }}</p>
   </section>
-
+  <!-- 
   <form class="survey__form" action="">
     @for (question of questions(); track $index) {
       <fieldset class="question">
@@ -24,8 +24,14 @@
         <div class="options-wrapper">
           @for (answer of question.answers; track $index) {
             <div class="option">
-              <input id="{{ answer }}" class="option__checkbox" type="checkbox" />
-              <label class="option__text" for="{{ answer }}">
+              <input
+                class="option__input"
+                [type]="question.allowMultipleAnswers ? 'checkbox' : 'radio'"
+                [id]="'opt-' + question.id + '-' + $index"
+                [name]="'question-' + question.id"
+                [value]="answer.text"
+              />
+              <label class="option__text" for="{{ 'opt-' + question.id + '-' + $index }}">
                 <span class="letter"> {{ getLetter($index) }}.</span> {{ answer.text }}</label
               >
             </div>
@@ -36,5 +42,7 @@
 
     <div></div>
     <button type="submit" class="complete-btn">Complete survey</button>
-  </form>
+  </form> -->
+
+  <app-survey-form></app-survey-form>
 </article>

@@ -2,7 +2,7 @@ import { categoriesLiteral } from '../../shared/literals/literals';
 
 export interface Answer {
   text: string;
-  voteCount: number;
+  vote_count: number;
 }
 
 export interface Question {
@@ -10,6 +10,11 @@ export interface Question {
   allowMultipleAnswers: boolean;
   surveyId: number;
   answers: Answer[];
+}
+
+export interface QuestionDB extends Question {
+  id: number;
+  created_at: string;
 }
 
 export interface Survey {

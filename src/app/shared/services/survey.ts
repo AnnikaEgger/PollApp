@@ -2,7 +2,7 @@ import { Service, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '../../../environments/environment';
-import { Survey, Question, Answer, SurveyDB } from '../interfaces/survey';
+import { Survey, Question, Answer, SurveyDB, QuestionDB } from '../interfaces/survey';
 
 @Service()
 export class SurveyService {
@@ -17,18 +17,20 @@ export class SurveyService {
     end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   });
 
-  currentQuestions = signal<Question[]>([
+  currentQuestions = signal<QuestionDB[]>([
     {
       question: '',
       allowMultipleAnswers: false,
       surveyId: 0,
       answers: [],
+      id: 0,
+      created_at: '',
     },
   ]);
 
   constructor() {
     this.currentSurveyId = this.route.snapshot.paramMap.get('surveyId');
-    this.getSurvey(6);
+    this.getSurvey(5);
   }
 
   async getSurvey(surveyId: number) {
@@ -48,6 +50,7 @@ export class SurveyService {
       .eq('surveyId', survey.id);
 
     if (data) this.currentQuestions.set(data);
+    console.log(this.currentQuestions());
   }
 
   async deleteQuestions() {
