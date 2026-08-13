@@ -1,0 +1,33 @@
+@import '../../../../styles/abstracts/mixins';
+
+.survey {
+  height: 100%;
+  font-family: var(--font-text-regular);
+  font-size: var(--font-sizes-text-regular);
+  color: var(--color-purple-dark);
+
+  &__header {
+    @include flex-column-space-btw;
+    gap: 20px;
+  }
+
+  &__meta {
+    @include flex-space-btw;
+  }
+
+  &__title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    color: var(--color-orange-primary);
+  }
+
+  &__description {
+    padding: 20px 0;
+  }
+
+  &__questions {
+    @include grid-two-columns;
+    padding-bottom: 20px;
+    gap: 32px;
+  }
+}

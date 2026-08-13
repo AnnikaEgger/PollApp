@@ -1,0 +1,9 @@
+<section class="option">
+  <ul class="option__ul">
+    <li class="option__entry" [class.disabled]="isPastSurvey()">
+      <span class="checkbox" [class.checkbox--checked]="isChecked()"></span>
+      <span class="option__letter">{{ option().letter }}.</span>
+      <span class="option__text">{{ option().text }}</span>
+    </li>
+  </ul>
+</section>

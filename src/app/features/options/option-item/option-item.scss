@@ -1,0 +1,31 @@
+@import '../../../../styles/abstracts/mixins';
+
+.option {
+  &__ul {
+    @include reset-li;
+  }
+
+  &__entry {
+    cursor: pointer;
+    margin: 16px 0;
+    padding: 4px 8px;
+    @include flex-space-btw;
+    justify-content: flex-start;
+
+    &:hover {
+      background-color: var(--color-orange-tertiary);
+    }
+  }
+
+  &__letter {
+    margin: 0 8px;
+    font-weight: 800;
+  }
+}
+
+.option__entry.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background-color: transparent;
+}
