@@ -1,0 +1,57 @@
+@use '../../../styles/abstracts/use-abstracts' as *;
+
+.survey-results {
+  h2 {
+    font-size: var(--font-size-text-regular);
+    text-align: left;
+    margin-left: 16px;
+  }
+
+  &__visual {
+    @include flex-space-btw;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  p {
+    width: 12px;
+  }
+
+  &__option-letter {
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  &__percentage {
+    width: 55px;
+    font-weight: 800;
+    color: rgba(215, 148, 81, 1);
+  }
+}
+
+.vote-bar {
+  position: relative;
+  width: 100%;
+  height: 14px;
+  flex-grow: 1;
+
+  &__track {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: fill;
+    border-radius: 0 20px 20px 0;
+    background-color: #ededed;
+  }
+
+  &__fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: var(--color-orange-primary);
+    border-radius: 0 20px 20px 0;
+    transition: width 0.3s ease;
+  }
+}
