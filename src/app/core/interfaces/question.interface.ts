@@ -1,3 +1,5 @@
+import { Option } from './option.interface';
+
 export interface Question {
   id: string;
   created_at: string;
@@ -5,4 +7,5 @@ export interface Question {
   text: string;
   allow_multiple: boolean;
   number: string;
+  options: Option[];
 }

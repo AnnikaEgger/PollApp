@@ -1,0 +1,20 @@
+<section class="vote-results">
+  @if (question()) {
+    <h2>{{ question()!.number }}. {{ question()!.text }}</h2>
+  }
+
+  @for (o of options(); track o.letter) {
+    <div class="vote-results__visual">
+      <p>{{ o.letter }}. {{ o.text }}</p>
+
+      <div class="vote-bar">
+        <div class="vote-bar__track"></div>
+        <div class="vote-bar__fill" [style.width.%]="computeVotesToPercentages(o)"></div>
+      </div>
+
+      <span class="vote-results__percentage">
+        {{ computeVotesToPercentages(o) | percentage: 0 }}
+      </span>
+    </div>
+  }
+</section>
