@@ -51,4 +51,44 @@ export class QuestionService {
       console.error('Unexpected JS runtime error insertQuestion:', err);
     }
   }
+
+  async updateVotesForQuestion(questionId: string, selectedLetters: string[]) {
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('questions')
+        .select('options')
+        .eq('id', questionId)
+        .single();
+
+      if (fetchError || !data) {
+        console.error('Fehler beim Laden der Optionen für Vote-Update:', fetchError);
+        return;
+      }
+
+      const rawOptions = data.options ?? [];
+
+      const updatedOptions = rawOptions.map((opt: any, index: number) => {
+        const currentLetter = String.fromCharCode(65 + index); // A, B, C...
+
+        if (selectedLetters.includes(currentLetter)) {
+          return {
+            ...opt,
+            vote_count: (opt.vote_count ?? 0) + 1,
+          };
+        }
+        return opt;
+      });
+
+      const { error: updateError } = await supabase
+        .from('questions')
+        .update({ options: updatedOptions })
+        .eq('id', questionId);
+
+      if (updateError) {
+        console.error('Fehler beim Speichern der Stimme:', updateError);
+      }
+    } catch (err) {
+      console.error('Unerwarteter Fehler im QuestionService:', err);
+    }
+  }
 }

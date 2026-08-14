@@ -15,17 +15,17 @@
     &:hover {
       background-color: var(--color-orange-tertiary);
     }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+      background-color: transparent;
+    }
   }
 
   &__letter {
     margin: 0 8px;
     font-weight: 800;
   }
-}
-
-.option__entry.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-  background-color: transparent;
 }

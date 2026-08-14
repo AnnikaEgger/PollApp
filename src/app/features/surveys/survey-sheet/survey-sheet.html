@@ -20,7 +20,7 @@
         [isPastSurvey]="isPastSurvey()"
         class="survey__question-item"
         [question]="q"
-        (selectedChange)="selectionChanged.emit($event)"
+        (selectedChange)="handleSelection($event)"
       >
       </app-question-item>
     }

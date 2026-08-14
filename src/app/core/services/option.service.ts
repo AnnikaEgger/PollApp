@@ -1,35 +1,29 @@
-import { Service, signal } from '@angular/core';
+import { Service, signal, inject } from '@angular/core';
 import { Option } from '../interfaces/option.interface';
 import { supabase } from './supabase.client';
+import { QuestionService } from './question.service';
 
 @Service()
 export class OptionService {
   options = signal<Option[]>([]);
+  questionService = inject(QuestionService);
+  questions = this.questionService.questions;
 
   async getOptionsForQuestion(questionId: string): Promise<Option[]> {
-    try {
-      const { data, error } = await supabase
-        .from('questions')
-        .select('options')
-        .eq('id', questionId)
-        .single();
+    const { data, error } = await supabase
+      .from('questions')
+      .select('options')
+      .eq('id', questionId)
+      .single();
 
-      if (error) {
-        console.error('getOptionsForQuestion error:', error);
-        return [];
-      }
-
-      const rawOptions = data?.options ?? [];
-
-      return rawOptions.map((opt: any, index: number) => ({
-        ...opt,
-        letter: String.fromCharCode(65 + index),
-      }));
-    } catch (err) {
-      console.error('Unexpected error in getOptionsForQuestion:', err);
+    if (error) {
+      console.error('Fehler beim Laden der Optionen:', error);
       return [];
     }
+
+    return data?.options ?? [];
   }
+
   async getOptionsForSurvey(surveyId: string): Promise<void> {
     try {
       const { data, error } = await supabase

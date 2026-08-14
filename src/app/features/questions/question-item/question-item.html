@@ -6,13 +6,13 @@
   }
 
   <div class="question__options">
-    @for (o of options(); track o.id) {
+    @for (o of options(); track o.letter) {
       <app-option-item
         class="question__option"
         [option]="o"
         [isPastSurvey]="isPastSurvey()"
-        [isChecked]="selectedOptions().includes(o.id)"
-        (clicked)="onOptionClicked($event)"
+        [isChecked]="selectedOptions().includes(o.letter)"
+        (clicked)="onOptionClicked(o.letter)"
       >
       </app-option-item>
     }

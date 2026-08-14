@@ -18,42 +18,58 @@ export class QuestionItem {
   options = signal<Option[]>([]);
   private optionChannel: RealtimeChannel | null = null;
   isPastSurvey = input<boolean>(false);
+
   selectedOptions = signal<string[]>([]);
+
   selectedChange = output<{ questionId: string; optionIds: string[] }>();
 
   async ngOnInit() {
-    const initialOptions = await this.optionService.getOptionsForQuestion(this.question().id);
-    this.options.set(initialOptions);
-    this.listenForOptionInserts();
+    const rawOptions = await this.optionService.getOptionsForQuestion(this.question().id);
+
+    const mappedOptions = rawOptions.map((opt: any, index: number) => ({
+      ...opt,
+      letter: String.fromCharCode(65 + index),
+    }));
+
+    this.options.set(mappedOptions);
+    this.listenForOptionUpdates();
   }
 
   ngOnDestroy() {
-    this.stopListeningForOptionInsert();
+    this.stopListeningForOptionUpdates();
   }
 
-  listenForOptionInserts() {
+  listenForOptionUpdates() {
     if (this.optionChannel) {
-      this.stopListeningForOptionInsert();
+      this.stopListeningForOptionUpdates();
     }
+
     this.optionChannel = supabase
-      .channel(`options-insert-${this.question().id}`)
+      .channel(`question-options-${this.question().id}`)
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: 'UPDATE',
           schema: 'public',
-          table: 'options',
-          filter: `question_id=eq.${this.question().id}`,
+          table: 'questions',
+          filter: `id=eq.${this.question().id}`,
         },
         (payload) => {
-          const newOption = payload.new as Option;
-          this.options.update((current) => [...current, newOption]);
+          const updatedQuestion = payload.new as any;
+          const rawOptions = updatedQuestion?.options ?? [];
+
+          const mappedOptions = rawOptions.map((opt: any, index: number) => ({
+            ...opt,
+            letter: String.fromCharCode(65 + index),
+          }));
+
+          this.options.set(mappedOptions);
         },
       )
       .subscribe();
   }
 
-  stopListeningForOptionInsert() {
+  stopListeningForOptionUpdates() {
     if (this.optionChannel) {
       this.optionChannel.unsubscribe();
       this.optionChannel = null;
@@ -64,14 +80,15 @@ export class QuestionItem {
     return this.question().allow_multiple === true;
   }
 
-  onOptionClicked(optionId: string) {
+  onOptionClicked(letter: string) {
     if (this.isMultipleAllowed()) {
       this.selectedOptions.update((list) =>
-        list.includes(optionId) ? list.filter((id) => id !== optionId) : [...list, optionId],
+        list.includes(letter) ? list.filter((l) => l !== letter) : [...list, letter],
       );
     } else {
-      this.selectedOptions.set([optionId]);
+      this.selectedOptions.set([letter]);
     }
+
     this.selectedChange.emit({
       questionId: this.question().id,
       optionIds: this.selectedOptions(),

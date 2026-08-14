@@ -17,6 +17,7 @@ export class SurveySheet {
   surveyQuestions = this.questionService.questions;
   private route = inject(ActivatedRoute);
   isPastSurvey = input<boolean>(false);
+
   selectionChanged = output<{ questionId: string; optionIds: string[] }>();
 
   ngOnInit() {
@@ -44,5 +45,11 @@ export class SurveySheet {
       month: '2-digit',
       year: 'numeric',
     }).format(date);
+  }
+
+  async handleSelection(event: { questionId: string; optionIds: string[] }) {
+    await this.questionService.updateVotesForQuestion(event.questionId, event.optionIds);
+
+    this.selectionChanged.emit(event);
   }
 }
