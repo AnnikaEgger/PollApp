@@ -1,0 +1,78 @@
+@use '../../../styles/abstracts/use-abstracts' as *;
+
+.error_msg {
+  color: red;
+  font-size: var(--font-size-text-small);
+  margin-top: 8px;
+  width: 200px;
+  visibility: hidden;
+}
+
+.error_msg--visible {
+  visibility: visible;
+}
+
+.create-survey__upper {
+  @include flex-space-btw;
+}
+
+.create-survey__left {
+  @include flex-column-space-btw;
+  gap: 20px;
+}
+
+.create-survey__field {
+  @include flex-column-space-btw;
+}
+
+.create-survey__label {
+  margin-bottom: 8px;
+}
+
+.create-survey__input-row {
+  @include flex-space-btw;
+  justify-content: unset;
+  gap: 8px;
+}
+
+.create-survey__row {
+  @include flex-space-btw;
+}
+
+.create-survey__right {
+  align-self: flex-start;
+  app-delete-btn {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 1000px) {
+  .create-survey__upper {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .create-survey__row {
+    flex-direction: column-reverse;
+  }
+
+  .create-survey__dropdown {
+    align-self: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .create-survey__upper,
+  .create-survey__left,
+  .create-survey__right,
+  .create-survey__row,
+  .create-survey__field,
+  .create-survey__input-row {
+    width: 100%;
+  }
+
+  .create-survey__input-row input,
+  .create-survey__input-row textarea {
+    flex: 1;
+    width: 100%;
+  }
+}

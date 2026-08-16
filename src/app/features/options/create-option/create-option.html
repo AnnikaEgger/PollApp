@@ -1,0 +1,47 @@
+<section class="create-survey__add-option">
+  @for (o of options()?.controls; track o; let i = $index) {
+    <div class="create-survey__option">
+      <div class="create-survey__option-row">
+        <span class="create-survey__option-label">{{ getLetter(i) }}.</span>
+        <input
+          type="text"
+          class="survey__input--medium-width survey__input--card"
+          [formControl]="getTextControl(o)"
+          (blur)="showErrorMsg(i)"
+          (input)="showErrorMsg(i)"
+        />
+        <app-delete-btn (delete)="onDeleteOption(i)"></app-delete-btn>
+      </div>
+      <p class="error_msg" [class.error_msg--visible]="optionErrors[i]">
+        This field cannot be empty!
+      </p>
+    </div>
+  }
+  <div class="create-survey__add-answer">
+    <button (click)="addOption.emit(questionIndex()!)" type="button" class="create-survey__add-btn">
+      Add answer
+      <svg class="create-survey__add-icon" width="16" height="16" viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5" fill="none" />
+        <line
+          x1="8"
+          y1="4.5"
+          x2="8"
+          y2="11.5"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+        <line
+          x1="4.5"
+          y1="8"
+          x2="11.5"
+          y2="8"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+    <span class="create-survey__hint">You can add up to 6 answer fields.</span>
+  </div>
+</section>

@@ -1,0 +1,64 @@
+@use '../../../../styles/abstracts/use-abstracts' as *;
+
+.error_msg {
+  color: red;
+  font-size: var(--font-size-text-small);
+  margin-top: 8px;
+  width: 200px;
+  visibility: hidden;
+
+  &--visible {
+    visibility: visible;
+  }
+}
+
+.create-survey {
+  &__field {
+    margin-bottom: 16px;
+  }
+
+  &__field-header {
+    @include flex-space-btw;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 16px;
+  }
+
+  &__allow-multiple {
+    @include flex-space-btw;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 8px;
+  }
+}
+
+.create-survey__checkbox {
+  @include flex-space-btw;
+  gap: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: var(--font-text);
+  color: white;
+
+  input {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid white;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-orange-quaternary-hover);
+    }
+
+    &:checked {
+      background-color: var(--color-orange-primary);
+      background-image: url('/angular-projects/poll-app/assets/images/icons/checkmark.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 8px;
+    }
+  }
+}

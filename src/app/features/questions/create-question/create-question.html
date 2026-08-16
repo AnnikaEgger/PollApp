@@ -1,0 +1,30 @@
+<section class="create-survey__field">
+  <div class="create-survey__field-header">
+    <label class="create-survey__label">{{ questionIndex()! + 1 }}. Question</label>
+    <app-delete-btn (delete)="deleteQuestion.emit()"></app-delete-btn>
+  </div>
+  <input
+    type="text"
+    class="survey__input--standard-width survey__input--card"
+    (blur)="showErrorMsg()"
+    (input)="showErrorMsg()"
+    [formControl]="getTextControl()"
+  />
+  <p class="error_msg" [class.error_msg--visible]="isVisible">This field cannot be empty!</p>
+</section>
+<section class="create-survey__answers">
+  <div class="create-survey__allow-multiple">
+    <label class="create-survey__label">Answers</label>
+    <label class="create-survey__checkbox">
+      <input type="checkbox" [formControl]="multipleAnswerControl" />
+      Allow multiple answers.
+    </label>
+  </div>
+  <app-create-option
+    [questionIndex]="questionIndex()"
+    [options]="questionGroup().get('options')"
+    (addOption)="addOption.emit()"
+    (deleteOption)="deleteOption.emit($event)"
+    #createOption
+  ></app-create-option>
+</section>

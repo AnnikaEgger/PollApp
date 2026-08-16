@@ -1,0 +1,60 @@
+@use '../../../../styles/abstracts/use-abstracts' as *;
+
+.error_msg {
+  color: red;
+  font-size: var(--font-size-text-small);
+  margin-top: 8px;
+  width: 200px;
+  visibility: hidden;
+
+  &--visible {
+    visibility: visible;
+  }
+}
+
+.create-survey {
+  &__option {
+    &-row {
+      @include flex-space-btw;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 4px;
+    }
+
+    .error_msg {
+      margin-bottom: 4px;
+    }
+  }
+
+  &__add-answer {
+    @include flex-space-btw;
+    width: 100%;
+    max-width: 310px;
+    margin: 8px 0;
+    span {
+      font-size: 12px;
+    }
+  }
+}
+
+.create-survey__add-btn {
+  background: none;
+  border: none;
+  border-bottom: 1px solid white;
+  color: white;
+  padding: 6px;
+  cursor: pointer;
+  @include flex-space-btw;
+  gap: 4px;
+
+  font-family: var(--font-text-bold);
+  font-size: 14px;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    background-color: #5c5061;
+  }
+}
