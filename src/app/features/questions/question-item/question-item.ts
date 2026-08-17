@@ -1,6 +1,5 @@
-import { Component, inject, signal, input, output } from '@angular/core';
+import { Component, inject, signal, input, output, OnInit, OnDestroy } from '@angular/core';
 import { Question } from '../../../core/interfaces/question.interface';
-import { OptionService } from '../../../core/services/option.service';
 import { OptionItem } from '../../options/option-item/option-item';
 import { Option } from '../../../core/interfaces/option.interface';
 import { supabase } from '../../../core/services/supabase.client';
@@ -12,31 +11,32 @@ import { RealtimeChannel } from '@supabase/supabase-js';
   templateUrl: './question-item.html',
   styleUrl: './question-item.scss',
 })
-export class QuestionItem {
+export class QuestionItem implements OnInit, OnDestroy {
   question = input.required<Question>();
-  optionService = inject(OptionService);
   options = signal<Option[]>([]);
   private optionChannel: RealtimeChannel | null = null;
   isPastSurvey = input<boolean>(false);
 
   selectedOptions = signal<string[]>([]);
-
   selectedChange = output<{ questionId: string; optionIds: string[] }>();
 
   async ngOnInit() {
-    const rawOptions = await this.optionService.getOptionsForQuestion(this.question().id);
+    this.loadOptionsFromQuestion();
 
-    const mappedOptions = rawOptions.map((opt: any, index: number) => ({
-      ...opt,
-      letter: String.fromCharCode(65 + index),
-    }));
-
-    this.options.set(mappedOptions);
     this.listenForOptionUpdates();
   }
 
   ngOnDestroy() {
     this.stopListeningForOptionUpdates();
+  }
+
+  loadOptionsFromQuestion() {
+    const rawOptions = this.question().options ?? [];
+    const mappedOptions = rawOptions.map((opt: any, index: number) => ({
+      ...opt,
+      letter: opt.letter ?? String.fromCharCode(65 + index),
+    }));
+    this.options.set(mappedOptions);
   }
 
   listenForOptionUpdates() {
@@ -60,7 +60,7 @@ export class QuestionItem {
 
           const mappedOptions = rawOptions.map((opt: any, index: number) => ({
             ...opt,
-            letter: String.fromCharCode(65 + index),
+            letter: opt.letter ?? String.fromCharCode(65 + index),
           }));
 
           this.options.set(mappedOptions);
