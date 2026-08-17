@@ -1,0 +1,119 @@
+@use '../abstracts/use-abstracts' as *;
+
+.card-primary {
+  background-color: var(--color-bg-card-light);
+  font-family: var(--font-text-regular);
+  color: var(--color-purple-dark);
+  border-radius: 0 75px 0 0;
+  width: 300px;
+  height: 300px;
+  padding: 32px;
+  @include flex-column-space-btw;
+  align-items: flex-start;
+
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-bg-card-dark);
+
+    .card-primary__badge {
+      background-color: var(--color-orange-primary);
+    }
+  }
+
+  &__top-wrapper {
+    @include flex-column;
+  }
+
+  &__category {
+    font-family: var(--font-text-semibold);
+    font-size: var(--font-size-text-small);
+    font-weight: 600;
+  }
+
+  &__title {
+    margin-top: 12px;
+    white-space: normal;
+    overflow: hidden;
+    display: block;
+    margin-bottom: 64px;
+  }
+
+  &__badge {
+    background-color: var(--color-orange-secondary);
+    font-family: var(--font-text-semibold);
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 0 14px 0 0;
+    padding: 3px 6px;
+    margin-top: 24px;
+  }
+
+  &-sd {
+    background-color: var(--color-bg-card-syrvey-details);
+    padding: 60px;
+    border-radius: 0 70px 0 0;
+  }
+}
+
+.card-secondary {
+  background-color: var(--color-bg-card-secondary);
+  cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 5px 50px 5px 5px;
+  height: 130px;
+  width: 100%;
+  max-width: 510px;
+  min-width: 400px;
+  @include flex-column-space-btw;
+  font-family: var(--font-text-regular);
+
+  &:hover {
+    background-color: var(--color-bg-card-secondary-hover);
+
+    .card-secondary__badge {
+      background-color: var(--color-orange-primary);
+    }
+  }
+
+  &__badge {
+    color: var(--color-purple-dark);
+    align-self: flex-end;
+    background-color: var(--color-orange-secondary);
+    font-family: var(--font-text-semibold);
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 0 14px 0 0;
+    padding: 3px 6px;
+  }
+
+  &__category {
+    color: var(--color-orange-secondary);
+  }
+
+  &__title {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    line-height: 1;
+  }
+
+  &__top-wrapper {
+    @include flex-column;
+    gap: 12px;
+  }
+}
+
+.badge {
+  background-color: var(--color-orange-primary);
+  font-family: var(--font-text-bold);
+  font-size: 16px;
+  border-radius: 0 10px 0 0;
+  padding: 6px;
+  margin-top: 24px;
+  width: 120px;
+}

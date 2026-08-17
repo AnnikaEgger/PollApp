@@ -1,7 +1,68 @@
-@mixin flex($direction: column, $gap: 0, $justify: center, $align: center) {
+@mixin flex-space-btw {
   display: flex;
-  gap: $gap;
-  justify-content: $justify;
-  flex-direction: $direction;
-  align-items: $align;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-column-space-btw {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@mixin grid-two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@mixin reset-li {
+  list-style-type: none;
+}
+
+@mixin input-no-focus {
+  &:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+    background-color: var(--color-orange-tertiary);
+  }
+}
+
+@mixin thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-orange-primary) transparent;
+  overflow: overlay;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+    appearance: none;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-orange-primary);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }

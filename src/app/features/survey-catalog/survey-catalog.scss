@@ -1,0 +1,77 @@
+@use '../../../styles/abstracts/use-abstracts' as *;
+
+h3 {
+  font-family: var(--font-text-medium);
+  font-size: var(--font-size-text-large);
+}
+
+.landing-page {
+  &__ending-soon-cards {
+    @include flex-space-btw;
+    gap: 16px;
+    flex-wrap: nowrap;
+  }
+}
+
+.landing-page__active-cards {
+  @include grid-two-columns;
+  max-height: 450px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 20px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 8px;
+
+    background: rgba(255, 183, 112, 1);
+    border-radius: 10px;
+    box-shadow: inset 3px 3px 3.2px 0px rgba(0, 0, 0, 0.25);
+    border: 6px solid transparent;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+}
+
+.no-surveys {
+  font-size: var(--font-size-text-medium);
+}
+
+.survey-list-container {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-bottom: 10px;
+  @include thin-scrollbar;
+}
+
+.survey-card {
+  flex: 0 0 auto;
+  width: 320px;
+}
+
+@media (max-width: 1000px) {
+  .landing-page__active-cards {
+    grid-template-columns: 1fr;
+    place-items: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .survey-card {
+    flex: 0 0 auto;
+    width: 250px;
+  }
+}

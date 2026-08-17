@@ -1,0 +1,24 @@
+.container {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.centered-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+.section-spacing-vertical {
+  margin-top: 120px;
+  margin-bottom: 120px; 
+}
+
+@media(max-width: 700px){
+  .centered-section {
+    padding: 0;
+  }
+}
+

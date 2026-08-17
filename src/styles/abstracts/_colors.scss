@@ -1,0 +1,27 @@
+:root {
+  --color-orange-primary: #ffb770;
+  --color-orange-secondary: #ffcfa1;
+  --color-orange-tertiary: #fee9d4;
+  --color-orange-quaternary: #ffb7704d;
+  --color-orange-quaternary-hover: #ffb77099;
+
+  --color-purple-dark: #35273a;
+  --color-purple-light: #433349;
+
+  --color-bg-card-light: #faf5fe;
+  --color-bg-card-dark: #f4e9fb;
+  --color-bg-card-dropdown: #ffffff;
+  --color-bg-card-secondary: #d9d9d914;
+  --color-bg-card-secondary-hover: #d9d9d929;
+  --color-bg-card-syrvey-details: #8e70991a;
+}
+
+$colors: (
+  purple-dark: var(--color-purple-dark),
+  orange-primary: var(--color-orange-primary),
+  orange-secondary: var(--color-orange-secondary),
+  orange-tertiary: var(--color-orange-tertiary),
+  bg-card-light: var(--color-bg-card-light),
+  bg-card-dark: var(--color-bg-card-dark),
+  bg-dropdown: var(--color-bg-card-dropdown),
+);

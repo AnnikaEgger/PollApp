@@ -1,0 +1,42 @@
+<section
+  [ngClass]="{
+    'landing-page__ending-soon-cards': !secondaryStyle(),
+    'survey-list-container': !secondaryStyle(),
+    'landing-page__active-cards': secondaryStyle(),
+  }"
+>
+  @for (item of getfilteredSurveys(); track item.id) {
+    <article
+      [class.card-primary]="!secondaryStyle()"
+      [class.survey-card]="!secondaryStyle()"
+      [class.card-secondary]="secondaryStyle()"
+      [routerLink]="['survey', item.id]"
+    >
+      <div
+        [class.card-primary__top-wrapper]="!secondaryStyle()"
+        [class.card-secondary__top-wrapper]="secondaryStyle()"
+      >
+        <p
+          [class.card-primary__category]="!secondaryStyle()"
+          [class.card-secondary__category]="secondaryStyle()"
+        >
+          {{ item.category }}
+        </p>
+        <h3
+          [class.card-primary__title]="!secondaryStyle()"
+          [class.card-secondary__title]="secondaryStyle()"
+        >
+          {{ item.title }}
+        </h3>
+      </div>
+      <span
+        [class.card-primary__badge]="!secondaryStyle()"
+        [class.card-secondary__badge]="secondaryStyle()"
+      >
+        {{ calculateRemainingDays(item.end_date) }}
+      </span>
+    </article>
+  } @empty {
+    <span class="no-surveys">"It’s a bit quiet here! No surveys found for this filter."</span>
+  }
+</section>
