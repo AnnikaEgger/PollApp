@@ -1,5 +1,5 @@
 import { Service, signal } from '@angular/core';
-import { Question } from '../interfaces/question.interface';
+import { Question, QuestionInsert } from '../interfaces/question.interface';
 import { supabase } from './supabase.client';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -32,19 +32,27 @@ export class QuestionService {
     }
   }
 
-  async insertQuestion(question: any, surveyId: number) {
+  async insertQuestion(question: QuestionInsert) {
     try {
+      const formattedOptions = (question.options || []).map((o: any) => ({
+        text: typeof o === 'string' ? o : o.text,
+        vote_count: o.vote_count ?? 0,
+      }));
+
       const { data, error } = await supabase
         .from('questions')
         .insert({
-          survey_id: surveyId,
+          survey_id: question.survey_id,
           number: question.number,
           text: question.text,
-          allow_multiple: question.allow_multiple,
+          multiple_answers_allowed: question.multiple_answers_allowed,
+          options: formattedOptions,
         })
         .select();
+
       if (error) {
         console.error('Supabase error at insertQuestion:', error);
+        return null;
       }
       return data?.[0];
     } catch (err) {
@@ -68,7 +76,7 @@ export class QuestionService {
       const rawOptions = data.options ?? [];
 
       const updatedOptions = rawOptions.map((opt: any, index: number) => {
-        const currentLetter = String.fromCharCode(65 + index); // A, B, C...
+        const currentLetter = String.fromCharCode(65 + index);
 
         if (selectedLetters.includes(currentLetter)) {
           return {

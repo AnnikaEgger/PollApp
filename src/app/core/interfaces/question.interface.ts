@@ -5,7 +5,15 @@ export interface Question {
   created_at: string;
   survey_id: string;
   text: string;
-  allow_multiple: boolean;
+  multiple_answers_allowed: boolean;
+  number: string;
+  options: Option[];
+}
+
+export interface QuestionInsert {
+  survey_id: string;
+  text: string;
+  multiple_answers_allowed: boolean;
   number: string;
   options: Option[];
 }

@@ -1,1 +1,5 @@
 @forward '../styles/main.scss';
+
+body:has(.create-survey-dialog[open]) main {
+  overflow-y: hidden;
+}

@@ -77,7 +77,7 @@ export class QuestionItem {
   }
 
   isMultipleAllowed(): boolean {
-    return this.question().allow_multiple === true;
+    return this.question().multiple_answers_allowed === true;
   }
 
   onOptionClicked(letter: string) {

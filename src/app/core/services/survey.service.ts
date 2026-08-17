@@ -8,9 +8,14 @@ export class SurveyService {
   surveys = signal<Survey[]>([]);
   singleSurvey = signal<Survey | null>(null);
   surveyChannel: RealtimeChannel | null = null;
+  dialogIsOpen = signal<boolean>(false);
 
   constructor() {
     this.getAllSurveys();
+  }
+
+  toggleCreateSurveyDialog() {
+    this.dialogIsOpen.update((value) => !value);
   }
 
   async getAllSurveys() {
@@ -48,7 +53,7 @@ export class SurveyService {
           description: survey.description,
           category: survey.category,
           end_date: survey.end_date,
-          published: survey.published,
+          published: true,
         })
         .select();
       if (error) {
