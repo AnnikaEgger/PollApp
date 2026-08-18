@@ -141,3 +141,25 @@ p {
     transform: translate(var(--tx, 0), var(--ty, 0));
   }
 }
+
+@media (max-width: 1000px) {
+  .landing-page__hero {
+    flex-direction: column;
+  }
+
+  .landing-page__hero-right {
+    display: none;
+  }
+
+  .landing-page__hero-right--mobile {
+    display: block;
+    align-self: center;
+    margin-bottom: 80px;
+  }
+
+  .landing-page__filters-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

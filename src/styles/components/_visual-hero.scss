@@ -1,0 +1,48 @@
+@use '../abstracts/use-abstracts' as *;
+
+.landing-page__visual {
+  position: relative;
+  width: clamp(280px, 40vw, 500px);
+  height: clamp(224px, 32vw, 400px);
+
+  &-center {
+    width: 100%;
+    z-index: 2;
+    position: relative;
+  }
+
+  &-icon {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    z-index: 1;
+
+    .landing-page__visual:hover & {
+      animation-play-state: paused;
+    }
+
+    &--chat {
+      top: 8%;
+      left: 20%;
+      animation: orbit-chat 1.5s ease-in-out infinite alternate;
+    }
+
+    &--check {
+      bottom: -15%;
+      right: 10%;
+      animation: orbit-check 2.2s ease-in-out infinite alternate;
+    }
+
+    &--star {
+      bottom: -20%;
+      left: 20%;
+      animation: orbit-star 1.8s ease-in-out infinite alternate;
+    }
+
+    &--question {
+      top: 5%;
+      right: 15%;
+      animation: orbit-question 2s ease-in-out infinite alternate;
+    }
+  }
+}

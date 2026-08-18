@@ -1,0 +1,207 @@
+@use '../abstracts/use-abstracts' as *;
+
+.btn {
+  font-family: var(--font-button);
+  font-size: var(--font-size-button);
+  font-weight: 700;
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px;
+  border: none;
+  @include flex-center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background-color: var(--color-orange-secondary);
+  color: var(--color-purple-dark);
+
+  &:hover {
+    background-color: var(--color-orange-primary);
+  }
+}
+
+.btn--icon-plus {
+  position: relative;
+  overflow: hidden;
+  gap: 0;
+
+  &::after {
+    content: '';
+    width: 0;
+    height: 20px;
+    background: url('/assets/images/icons/add_circle.svg') no-repeat center;
+    background-size: contain;
+    transition: width 0.2s ease;
+  }
+
+  &:hover {
+    gap: 0.5rem;
+
+    &::after {
+      width: 20px;
+    }
+  }
+}
+
+.btn--icon-check {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    width: 0;
+    height: 18px;
+    background: url('/assets/images/icons/checkmark.svg') no-repeat center;
+    background-size: contain;
+    transition: width 0.2s ease;
+  }
+
+  &:hover::after {
+    width: 18px;
+  }
+}
+
+.btn-secondary {
+  padding: 4px 12px;
+  font-family: var(--font-button);
+  font-size: var(--font-size-button);
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--color-orange-primary);
+
+  &-active {
+    background-color: var(--color-orange-primary);
+  }
+  &-inactive {
+    background-color: var(--color-orange-tertiary);
+  }
+  &:hover {
+    background-color: var(--color-orange-secondary);
+  }
+}
+
+.btn-tertiary {
+  @include flex-center;
+  gap: 32px;
+  padding: 10px 12px;
+  background: transparent;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-button);
+  font-size: var(--font-size-button);
+  color: white;
+
+  transition: color 0.2s ease;
+
+  &:hover {
+    background-color: #d9d9d91f;
+
+    svg {
+      color: var(--color-orange-primary);
+    }
+  }
+
+  .icon path {
+    fill: currentColor;
+    transition:
+      transform 0.2s ease,
+      fill 0.2s ease;
+  }
+
+  &.open .icon {
+    transform: rotate(180deg);
+  }
+}
+
+.btn-quaternary {
+  font-family: var(--font-button);
+  font-size: var(--font-size-button);
+  color: white;
+  @include flex-center;
+  gap: 8px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  padding: 10px 16px;
+  cursor: pointer;
+  background-color: var(--color-orange-quaternary);
+  color: white;
+
+  &:hover {
+    background-color: var(--color-orange-quaternary-hover);
+  }
+}
+
+.close-btn--mobile {
+  display: none;
+  margin-left: auto;
+  padding-top: 6px;
+  padding-bottom: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--color-orange-secondary);
+
+  @media (max-width: 1000px) {
+    display: block;
+  }
+}
+
+.see-results-btn--mobile {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 130px;
+  gap: 8px;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-button);
+  color: var(--color-purple-dark);
+
+  svg {
+    width: 15px;
+    height: 8px;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+
+  &.active svg {
+    transform: rotate(180deg);
+    color: var(--color-orange-primary);
+  }
+
+  @media (max-width: 1000px) {
+    display: flex;
+  }
+}
+
+@media (max-width: 1000px) {
+  .btn--icon-plus {
+    gap: 0.5rem;
+    background-color: var(--color-orange-primary);
+    align-items: center;
+    justify-self: center;
+
+    &::after {
+      width: 20px;
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .btn-secondary {
+    font-size: var(--font-size-text-small);
+  }
+}
+
+@media (max-width: 360px) {
+  .btn-tertiary {
+    gap: 8px;
+  }
+}

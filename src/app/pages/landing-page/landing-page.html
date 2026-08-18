@@ -40,10 +40,7 @@
           Create and share surveys in minutes - from team events to workplace culture. Collect
           opinions, engage your audience, and turn feedback into action.
         </p>
-        <button class="btn btn--primary btn--icon-plus" (click)="openCreateSurveyModal()">
-          New survey
-        </button>
-        <app-create-survey-page (close)="isCreateSurveyOpen = false"></app-create-survey-page>
+        <app-create-survey-btn></app-create-survey-btn>
       </div>
       <div class="landing-page__hero-right">
         <div class="landing-page__visual">
@@ -126,4 +123,6 @@
       </app-survey-catalog>
     </section>
   </main>
+
+  <app-create-survey-page (close)="isCreateSurveyOpen = false"></app-create-survey-page>
 </div>
