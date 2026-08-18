@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { SurveyService } from '../../../core/services/survey.service';
 
 @Component({
@@ -9,4 +9,5 @@ import { SurveyService } from '../../../core/services/survey.service';
 })
 export class CreateSurveyBtn {
   surveyService = inject(SurveyService);
+  @Input() buttonText: string = 'New Survey';
 }

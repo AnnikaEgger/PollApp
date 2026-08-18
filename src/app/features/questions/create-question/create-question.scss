@@ -1,10 +1,10 @@
 @use '../../../../styles/abstracts/use-abstracts' as *;
 
 .error-msg {
-  color: red;
+  color: rgb(249, 50, 50);
   font-size: var(--font-size-text-small);
-  margin-top: 8px;
-  width: 200px;
+  // margin-top: -8px;
+  // width: 200px;
   visibility: hidden;
 
   &--visible {
@@ -20,15 +20,13 @@
   &__field-header {
     @include flex-space-btw;
     width: 100%;
-    max-width: 300px;
     margin-bottom: 16px;
   }
 
   &__allow-multiple {
     @include flex-space-btw;
     width: 100%;
-    max-width: 300px;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
   }
 }
 
@@ -55,7 +53,7 @@
 
     &:checked {
       background-color: var(--color-orange-primary);
-      background-image: url('/angular-projects/poll-app/assets/images/icons/checkmark.svg');
+      background-image: url('/assets/images/icons/checkmark.svg');
       background-repeat: no-repeat;
       background-position: center;
       background-size: 8px;

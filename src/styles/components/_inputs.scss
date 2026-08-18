@@ -1,0 +1,44 @@
+@use '../abstracts/use-abstracts' as *;
+
+.survey__input--card {
+  background-color: white;
+  border: none;
+  padding: 14px 8px;
+  border-radius: 5px 20px 5px 5px;
+
+  height: 36px;
+  @include input-no-focus;
+  font-family: var(--font-text-bold);
+  // flex: 1;
+}
+
+.survey__textarea--card {
+  background-color: white;
+  border: none;
+  padding: 14px 8px;
+  border-radius: 5px 20px 5px 5px;
+  min-height: 110px;
+  resize: none;
+  font-family: var(--font-text-bold);
+  @include input-no-focus;
+  @include thin-scrollbar;
+  flex: 1;
+}
+
+.survey__input--standard-width {
+  width: 100%;
+}
+
+.survey__input--medium-width {
+  width: 250px;
+}
+
+.survey__input--small-width {
+  width: 150px;
+}
+
+@media (max-width: 900px) {
+  .survey__input--medium-width {
+    width: 100%;
+  }
+}

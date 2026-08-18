@@ -1,11 +1,13 @@
 @use '../../../styles/abstracts/use-abstracts' as *;
 
 .error_msg {
-  color: red;
+  color: rgb(249, 50, 50);
   font-size: var(--font-size-text-small);
-  margin-top: 8px;
-  width: 200px;
   visibility: hidden;
+
+  &--category {
+    justify-self: center;
+  }
 }
 
 .error_msg--visible {
@@ -13,30 +15,13 @@
 }
 
 .create-survey__upper {
-  @include flex-space-btw;
+  display: flex;
+  width: 100%;
+  gap: 64px;
 }
 
 .create-survey__left {
-  @include flex-column-space-btw;
-  gap: 20px;
-}
-
-.create-survey__field {
-  @include flex-column-space-btw;
-}
-
-.create-survey__label {
-  margin-bottom: 8px;
-}
-
-.create-survey__input-row {
-  @include flex-space-btw;
-  justify-content: unset;
-  gap: 8px;
-}
-
-.create-survey__row {
-  @include flex-space-btw;
+  flex: 1;
 }
 
 .create-survey__right {
@@ -44,6 +29,33 @@
   app-delete-btn {
     align-self: flex-start;
   }
+  flex: 1;
+}
+
+.create-survey__field {
+  // @include flex-column-space-btw;
+
+  flex: 1;
+}
+
+.create-survey__label {
+  margin-bottom: 8px;
+}
+
+.create-survey__input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input {
+    flex: 1;
+  }
+}
+
+.create-survey__row {
+  // @include flex-space-btw;
+  display: flex;
+  gap: 16px;
 }
 
 @media (max-width: 1000px) {

@@ -1,11 +1,10 @@
 @use '../../../../styles/abstracts/use-abstracts' as *;
 
 .error_msg {
-  color: red;
+  color: rgb(249, 50, 50);
   font-size: var(--font-size-text-small);
-  margin-top: 8px;
-  width: 200px;
   visibility: hidden;
+  margin-left: 24px;
 
   &--visible {
     visibility: visible;
@@ -15,10 +14,15 @@
 .create-survey {
   &__option {
     &-row {
-      @include flex-space-btw;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       width: 100%;
-      max-width: 300px;
       margin-bottom: 4px;
+
+      input {
+        flex: 1;
+      }
     }
 
     .error_msg {
