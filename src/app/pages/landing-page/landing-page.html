@@ -1,0 +1,129 @@
+<div class="container">
+  <header class="landing-header">
+    <img src="/assets/images/ui/logo_orange.svg" alt="Pollapp Logo" />
+  </header>
+
+  <main class="landing-page">
+    <section class="landing-page__hero">
+      <div class="landing-page__hero-left">
+        <h1 class="landing-page__title">Collect Feedback, <br />Unlock Ideas</h1>
+        <div class="landing-page__hero-right--mobile">
+          <div class="landing-page__visual">
+            <img
+              src="/assets/images/ui/visual_hero.png"
+              class="landing-page__visual-center"
+              alt="Phone Illustration"
+            />
+            <img
+              src="/assets/images/ui/visual_hero_typing_bubble.svg"
+              class="landing-page__visual-icon landing-page__visual-icon--chat"
+              alt="typing bubble illustration"
+            />
+            <img
+              src="/assets/images/ui/visual_hero_questionmark.svg"
+              class="landing-page__visual-icon landing-page__visual-icon--question"
+              alt="question mark illustration"
+            />
+            <img
+              src="/assets/images/ui/visual_hero_check.svg"
+              class="landing-page__visual-icon landing-page__visual-icon--check"
+              alt="checkmark illustration"
+            />
+            <img
+              src="/assets/images/ui/visual_hero_star.svg"
+              class="landing-page__visual-icon landing-page__visual-icon--star"
+              alt="star illustration"
+            />
+          </div>
+        </div>
+        <p class="landing-page__subtitle">
+          Create and share surveys in minutes - from team events to workplace culture. Collect
+          opinions, engage your audience, and turn feedback into action.
+        </p>
+        <button class="btn btn--primary btn--icon-plus" (click)="openCreateSurveyModal()">
+          New survey
+        </button>
+        <app-create-survey-page (close)="isCreateSurveyOpen = false"></app-create-survey-page>
+      </div>
+      <div class="landing-page__hero-right">
+        <div class="landing-page__visual">
+          <img
+            src="/assets/images/ui/visual_hero.png"
+            class="landing-page__visual-center"
+            alt="phone illustration"
+          />
+          <img
+            src="/assets/images/ui/visual_hero_typing_bubble.svg"
+            class="landing-page__visual-icon landing-page__visual-icon--chat"
+            alt="typing bubble"
+          />
+          <img
+            src="/assets/images/ui/visual_hero_questionmark.svg"
+            class="landing-page__visual-icon landing-page__visual-icon--question"
+            alt="question mark"
+          />
+          <img
+            src="/assets/images/ui/visual_hero_check.svg"
+            class="landing-page__visual-icon landing-page__visual-icon--check"
+            alt="checkmark"
+          />
+          <img
+            src="/assets/images/ui/visual_hero_star.svg"
+            class="landing-page__visual-icon landing-page__visual-icon--star"
+            alt="star"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-page__ending-soon centered-section section-spacing-vertical">
+      <h2 class="landing-page__section-title">Your surveys</h2>
+      <h3 class="landing-page__section-subtitle">Ending soon surveys</h3>
+      <app-survey-catalog
+        filter="ending-soon"
+        sort="soonest-first"
+        [secondaryStyle]="false"
+        [limit]="3"
+      ></app-survey-catalog>
+    </section>
+
+    <section class="landing-page__filters centered-section section-spacing-vertical">
+      <div class="landing-page__filters-top">
+        <div class="landing-page__filters-left">
+          <button
+            class="btn-secondary"
+            [class.btn-secondary-active]="activeFilter === 'active'"
+            [class.btn-secondary-inactive]="activeFilter !== 'active'"
+            (click)="activeFilter = 'active'"
+          >
+            Active surveys
+          </button>
+
+          <button
+            class="btn-secondary"
+            [class.btn-secondary-active]="activeFilter === 'past'"
+            [class.btn-secondary-inactive]="activeFilter !== 'past'"
+            (click)="activeFilter = 'past'"
+          >
+            Past surveys
+          </button>
+        </div>
+
+        <div class="landing-page__filters-right">
+          <app-dropdown
+            label="Sort by category"
+            [options]="categories"
+            [(value)]="selectedCategory"
+          ></app-dropdown>
+        </div>
+      </div>
+      <app-survey-catalog
+        [filter]="activeFilter"
+        sort="soonest-first"
+        [secondaryStyle]="true"
+        [category]="selectedCategory"
+      >
+      </app-survey-catalog>
+    </section>
+  </main>
+</div>

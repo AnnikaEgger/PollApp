@@ -1,0 +1,143 @@
+@use '../../../styles/abstracts/use-abstracts' as *;
+
+h1 {
+  font-family: var(--font-heading);
+  color: var(--color-orange-primary);
+  font-size: var(--font-size-h1);
+}
+
+h2 {
+  font-family: var(--font-heading);
+  color: var(--color-orange-primary);
+  font-size: var(--font-size-h2);
+  text-align: center;
+}
+
+h3 {
+  font-family: var(--font-text-medium);
+  font-size: var(--font-size-text-large);
+  font-weight: 500;
+}
+
+p {
+  font-family: var(--font-text-semibold);
+}
+
+.landing-header {
+  img {
+    height: 80px;
+    width: 100px;
+  }
+}
+
+.landing-page {
+  color: white;
+  margin-top: 40px;
+
+  &__filters-top {
+    margin-bottom: 30px;
+  }
+
+  &__ending-soon {
+    @include flex-column-space-btw;
+    gap: 40px;
+  }
+
+  &__filters-top {
+    @include flex-space-btw;
+
+    .landing-page__filters-left {
+      @include flex-space-btw;
+      gap: 16px;
+    }
+
+    .landing-page____filters-right {
+      span {
+        font-size: var(--font-size-text-medium);
+      }
+    }
+  }
+}
+
+.landing-page__hero {
+  @include flex-space-btw;
+
+  p {
+    font-family: var(--font-text-semibold);
+    font-size: var(--font-size-text-medium);
+  }
+
+  &-left {
+    @include flex-column-space-btw;
+    gap: 40px;
+
+    > * {
+      width: fit-content;
+    }
+  }
+
+  &-right--mobile {
+    display: none;
+  }
+}
+
+.landing-page__visual {
+  position: relative;
+  width: clamp(280px, 40vw, 500px);
+  height: clamp(224px, 32vw, 400px);
+
+  &-center {
+    width: 100%;
+    z-index: 2;
+    position: relative;
+  }
+
+  &-icon {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    z-index: 1;
+
+    .landing-page__visual:hover & {
+      animation-play-state: paused;
+    }
+
+    &--chat {
+      top: 8%;
+      left: 20%;
+      animation: floatDiagonal 1.5s ease-in-out infinite alternate;
+      --tx: -40px;
+      --ty: -40px;
+    }
+
+    &--check {
+      bottom: -15%;
+      right: 10%;
+      animation: floatDiagonal 2.2s ease-in-out infinite alternate;
+      --tx: 40px;
+      --ty: 40px;
+    }
+
+    &--star {
+      bottom: -20%;
+      left: 20%;
+      animation: floatDiagonal 1.8s ease-in-out infinite alternate;
+      --tx: -40px;
+      --ty: 40px;
+    }
+
+    &--question {
+      top: 5%;
+      right: 15%;
+      animation: floatDiagonal 2s ease-in-out infinite alternate;
+      --tx: 40px;
+      --ty: -40px;
+    }
+  }
+}
+
+@keyframes floatDiagonal {
+  to {
+    transform: translate(var(--tx, 0), var(--ty, 0));
+  }
+}
