@@ -88,3 +88,9 @@
     width: 100%;
   }
 }
+
+@media screen and (max-width: 768px) {
+  .create-survey__row {
+    padding: 0 8px;
+  }
+}

@@ -60,3 +60,21 @@
     }
   }
 }
+
+@media (max-width: 900px) {
+  .create-survey__field-header,
+  .create-survey__allow-multiple {
+    max-width: none;
+    width: 100%;
+  }
+
+  .survey__input--standard-width {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .create-survey__field {
+    padding: 0 8px;
+  }
+}
