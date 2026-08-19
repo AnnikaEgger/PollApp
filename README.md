@@ -1,59 +1,74 @@
 # Pollapp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.2.
+An Angular application for creating surveys and collecting votes in real time.
 
-## Development server
+![Pollapp landing page preview](public/assets/images/readme-preview.png)
 
-To start a local development server, run:
+## Quick start
 
-```bash
-ng serve
-```
+### Prerequisites
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js and npm
+- A configured Supabase project
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Installation
 
 ```bash
-ng generate component component-name
+npm install
+npm run start
+npm run build
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Supabase Configuration
+
+The Supabase connection settings are located in src/environments/environment.ts.
+Before connecting the application to your own Supabase project, add your project URL and API key:
 
 ```bash
-ng generate --help
+export const env = {
+supabase_url: '',
+supabase_key: '',
+};
 ```
 
-## Building
+## Key features
 
-To build the project run:
+- Create surveys with categories, descriptions, multiple questions, and end dates
+- Support single- and multiple-choice questions
+- Browse surveys by category and view live voting results
+- Built with a modular, component-based architecture
+- Powered by Supabase for data storage and real-time updates
 
-```bash
-ng build
+## Tech stack
+
+- [Angular](https://angular.dev/) 22
+- Angular Reactive Forms
+- TypeScript 6
+- [Supabase](https://supabase.com/)
+- SCSS
+
+## Project structure
+
+```text
+public/
+└── assets/                  # Fonts, icons, UI images, and preview image
+
+src/
+├── app/
+│   ├── core/
+│   │   ├── interfaces/      # Survey, question, option, and vote types
+│   │   └── services/        # Supabase access and application services
+│   ├── features/             # Reusable survey, question, option, and result UI
+│   ├── pages/                # Landing, survey, and survey creation pages
+│   ├── shared/               # Shared components, constants, pipes, and models
+│   ├── app.config.ts         # Application providers
+│   ├── app.routes.ts         # Route definitions
+│   └── app.ts                # Root component
+├── environments/             # Environment-specific configuration
+├── styles/                   # Global SCSS design system and layout styles
+├── index.html
+└── main.ts                   # Application entry point
+
+angular.json                 # Angular CLI configuration
+package.json                 # Scripts and dependencies
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
