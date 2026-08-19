@@ -1,5 +1,6 @@
 @forward '../styles/main.scss';
 
-body:has(.create-survey-dialog[open]) main {
-  overflow-y: hidden;
+body:has(.create-survey-dialog[open]) .survey-content,
+body:has(.create-survey-dialog[open]) .landing-page {
+  display: none;
 }
