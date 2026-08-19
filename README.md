@@ -2,7 +2,7 @@
 
 An Angular application for creating surveys and collecting votes in real time.
 
-![Pollapp landing page preview](public/assets/images/readme-preview.png)
+![Pollapp landing page preview](assets/images/readme-preview.png)
 
 ## Quick start
 

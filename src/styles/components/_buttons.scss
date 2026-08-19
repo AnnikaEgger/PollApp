@@ -30,7 +30,7 @@
     content: '';
     width: 0;
     height: 20px;
-    background: url('/assets/images/icons/add_circle.svg') no-repeat center;
+    background: url('../../../public/assets/images/icons/add_circle.svg') no-repeat center;
     background-size: contain;
     transition: width 0.2s ease;
   }
@@ -52,7 +52,7 @@
     content: '';
     width: 0;
     height: 18px;
-    background: url('/assets/images/icons/checkmark.svg') no-repeat center;
+    background: url('../../../public/assets/images/icons/checkmark.svg') no-repeat center;
     background-size: contain;
     transition: width 0.2s ease;
   }
