@@ -34,9 +34,10 @@ export class QuestionService {
 
   async insertQuestion(question: QuestionInsert) {
     try {
-      const formattedOptions = (question.options || []).map((o: any) => ({
+      const formattedOptions = (question.options || []).map((o: any, index: number) => ({
         text: typeof o === 'string' ? o : o.text,
-        vote_count: o.vote_count ?? 0,
+        letter: String.fromCharCode(65 + index),
+        vote_count: typeof o === 'string' ? 0 : (o.vote_count ?? 0),
       }));
 
       const { data, error } = await supabase

@@ -1,6 +1,8 @@
-@import '../../../styles/abstracts/mixins';
+@use '../../../styles/abstracts/use-abstracts' as *;
 
 .survey-header {
+  @include flex-space-btw;
+
   margin-bottom: 40px;
   nav {
     @include flex-space-btw;
@@ -18,10 +20,6 @@
 }
 
 .survey {
-  &__survey {
-    flex: 2;
-  }
-
   &__results {
     flex: 1;
     @include flex-column-space-btw;
@@ -58,8 +56,10 @@
   &__btn {
     justify-self: flex-end;
 
-    &:disabled {
-      opacity: 0.5;
+    &.btn--disabled {
+      background-color: #e1e1e1;
+      color: #8a8a8a;
+      cursor: not-allowed;
       pointer-events: none;
     }
   }
@@ -87,4 +87,44 @@
     max-height: 1000px;
     transform: translateY(0);
   }
+}
+
+.survey-results__h2 {
+  font-size: 32px;
+  font-family: 'Nerko One', sans-serif;
+  font-weight: 400;
+  margin-bottom: 16px;
+
+  span {
+    color: var(--color-orange-primary);
+  }
+}
+
+.survey-details__placeholder {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+@media (max-width: 1000px) {
+  .survey-content {
+    flex-direction: column;
+  }
+
+  .survey-header {
+    button {
+      display: none;
+    }
+  }
+
+  // .survey-details__votes {
+  //   margin-bottom: 80px;
+  //   margin-top: 20px;
+  //   justify-content: center;
+  //   align-items: center;
+  // }
+
+  // .survey-details__votes-container {
+  //   max-width: 850px;
+  //   width: 100%;
+  // }
 }

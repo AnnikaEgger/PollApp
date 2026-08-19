@@ -33,10 +33,15 @@ export class SurveyPage {
 
       return {
         ...question,
-        options: question.options.map((option) => ({
-          ...option,
-          vote_count: (option.vote_count ?? 0) + (selectedLetters.includes(option.letter) ? 1 : 0),
-        })),
+        options: (question.options ?? []).map((option, index) => {
+          const letter = String.fromCharCode(65 + index);
+
+          return {
+            ...option,
+            letter,
+            vote_count: (option.vote_count ?? 0) + (selectedLetters.includes(letter) ? 1 : 0),
+          };
+        }),
       };
     }),
   );

@@ -40,7 +40,7 @@ export class CreateQuestion {
   }
 
   get multipleAnswerControl() {
-    return this.questionGroup().get('allow_multiple');
+    return this.questionGroup().get('multiple_answers_allowed');
   }
 
   getQuestionControl() {

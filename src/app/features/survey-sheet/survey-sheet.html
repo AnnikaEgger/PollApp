@@ -1,0 +1,29 @@
+<section class="survey">
+  <article class="survey__header">
+    <span class="badge">{{ getPublishLabel() }}</span>
+
+    <div class="survey__meta">
+      <p class="survey__meta-item">Ends on: {{ formatEndDate() || 'No end date' }}</p>
+      <p class="survey__meta-item">Category: {{ surveyDetails()?.category }}</p>
+    </div>
+
+    <h2 class="survey__title">{{ surveyDetails()?.title }}</h2>
+
+    <p class="survey__description">
+      {{ surveyDetails()?.description }}
+    </p>
+  </article>
+
+  <article class="survey__questions">
+    @for (q of surveyQuestions(); track q.id) {
+      <app-question-item
+        [isPastSurvey]="isPastSurvey()"
+        [isDisabled]="isDisabled()"
+        class="survey__question-item"
+        [question]="q"
+        (selectedChange)="handleSelection($event)"
+      >
+      </app-question-item>
+    }
+  </article>
+</section>

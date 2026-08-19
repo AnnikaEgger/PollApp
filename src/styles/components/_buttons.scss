@@ -192,6 +192,12 @@
       width: 20px;
     }
   }
+
+  body:has(.survey__survey) {
+    .btn--icon-plus {
+      display: none;
+    }
+  }
 }
 
 @media (max-width: 400px) {

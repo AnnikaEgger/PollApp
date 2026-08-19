@@ -11,6 +11,7 @@
         class="question__option"
         [option]="o"
         [isPastSurvey]="isPastSurvey()"
+        [isDisabled]="isDisabled()"
         [isChecked]="selectedOptions().includes(o.letter)"
         (clicked)="onOptionClicked(o.letter)"
       >

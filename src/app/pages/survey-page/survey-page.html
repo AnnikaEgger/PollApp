@@ -1,8 +1,10 @@
 <div class="container">
   <header class="survey-header">
     <nav>
-      <img [routerLink]="['/']" src="/assets/images/ui/logo_dark.svg" alt="Pollapp Logo" />
+      <img [routerLink]="['']" src="/assets/images/ui/logo_dark.svg" alt="Pollapp Logo" />
     </nav>
+
+    <app-create-survey-btn buttonText="Create Survey"></app-create-survey-btn>
   </header>
 
   <main class="survey-content">
@@ -22,21 +24,59 @@
         </svg>
       </button>
 
-      <app-survey-sheet #surveySheet></app-survey-sheet>
+      <app-survey-sheet
+        #surveySheet
+        [isPastSurvey]="isPastSurvey"
+        [isDisabled]="userHasVoted || isPastSurvey"
+        (selectionChanged)="onSelectionChanged($event)"
+      ></app-survey-sheet>
 
-      @if (!userHasVoted && !surveySheet.isPastSurvey()) {
+      @if (!userHasVoted && !isPastSurvey) {
         <button (click)="completeSurvey()" class="survey__btn btn btn--primary">
           Complete survey
         </button>
       } @else {
-        <button class="survey__btn btn btn--disabled" disabled>Survey completed</button>
+        <button class="survey__btn btn btn--disabled" disabled>Complete survey</button>
       }
     </section>
 
-    <section class="survey__results">
-      @for (q of surveySheet.surveyQuestions(); track q.id) {
-        <app-survey-results [question]="q" [options]="q.options"></app-survey-results>
-      }
-    </section>
+    <button
+      class="see-results-btn--mobile"
+      (click)="showResultsMobile = !showResultsMobile"
+      [class.active]="showResultsMobile"
+    >
+      {{ !showResultsMobile ? 'See results' : 'Hide results' }}
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="8" viewBox="0 0 15 8" fill="none">
+        <path
+          d="M6.5843 7.61702L0.261628 1.44681C0.174419 1.3617 0.109012 1.2695 0.065407 1.17021C0.0218023 1.07092 0 0.964539 0 0.851064C0 0.624114 0.0799419 0.425532 0.239826 0.255319C0.399709 0.0851064 0.610465 0 0.872093 0H14.1279C14.3895 0 14.6003 0.0851064 14.7602 0.255319C14.9201 0.425532 15 0.624114 15 0.851064C15 0.907802 14.9128 1.10638 14.7384 1.44681L8.4157 7.61702C8.27035 7.75887 8.125 7.85816 7.97965 7.91489C7.8343 7.97163 7.67442 8 7.5 8C7.32558 8 7.1657 7.97163 7.02035 7.91489C6.875 7.85816 6.72965 7.75887 6.5843 7.61702Z"
+          fill="currentColor"
+        />
+      </svg>
+    </button>
+    @if (showResultsMobile) {
+      <section class="survey__votes results-anim">
+        <h2 class="survey-results__h2">Survey results <span>LIVE</span></h2>
+        <div class="survey__votes-container">
+          @if (!hasVotes() && !hasLocalVotes()) {
+            <div class="survey__placeholder">
+              <p>Results will be shown here after participants complete the survey.</p>
+              <p>There are no answers yet.</p>
+            </div>
+          }
+          @if (hasVotes() || hasLocalVotes()) {
+            @for (q of displayedQuestions(); track q.id) {
+              <div class="survey__live-results">
+                <app-survey-results [question]="q" [options]="q.options"></app-survey-results>
+              </div>
+            }
+          }
+          @if (userHasVoted) {
+            <p class="survey__already-voted">You have already voted in this survey.</p>
+          }
+        </div>
+      </section>
+    }
   </main>
+
+  <app-create-survey-page></app-create-survey-page>
 </div>

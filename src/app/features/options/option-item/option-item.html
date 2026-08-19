@@ -2,8 +2,8 @@
   <ul class="option__ul">
     <li
       class="option__entry"
-      [class.disabled]="isPastSurvey()"
-      (click)="!isPastSurvey() && submitVote(option().letter)"
+      [class.disabled]="isDisabled() || isPastSurvey()"
+      (click)="submitVote(option().letter)"
     >
       <span class="checkbox" [class.checkbox--checked]="isChecked()"></span>
       <span class="option__letter">{{ option().letter }}.</span>

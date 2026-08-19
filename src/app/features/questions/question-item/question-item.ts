@@ -16,6 +16,7 @@ export class QuestionItem implements OnInit, OnDestroy {
   options = signal<Option[]>([]);
   private optionChannel: RealtimeChannel | null = null;
   isPastSurvey = input<boolean>(false);
+  isDisabled = input<boolean>(false);
 
   selectedOptions = signal<string[]>([]);
   selectedChange = output<{ questionId: string; optionIds: string[] }>();
@@ -34,7 +35,7 @@ export class QuestionItem implements OnInit, OnDestroy {
     const rawOptions = this.question().options ?? [];
     const mappedOptions = rawOptions.map((opt: any, index: number) => ({
       ...opt,
-      letter: opt.letter ?? String.fromCharCode(65 + index),
+      letter: String.fromCharCode(65 + index),
     }));
     this.options.set(mappedOptions);
   }
@@ -60,7 +61,7 @@ export class QuestionItem implements OnInit, OnDestroy {
 
           const mappedOptions = rawOptions.map((opt: any, index: number) => ({
             ...opt,
-            letter: opt.letter ?? String.fromCharCode(65 + index),
+            letter: String.fromCharCode(65 + index),
           }));
 
           this.options.set(mappedOptions);

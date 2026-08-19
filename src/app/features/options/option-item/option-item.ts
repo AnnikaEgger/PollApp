@@ -12,11 +12,13 @@ import { supabase } from '../../../core/services/supabase.client';
 export class OptionItem {
   option = input.required<Option>();
   isPastSurvey = input<boolean>(false);
+  isDisabled = input<boolean>(false);
   voteService = inject(VoteService);
   isChecked = input<boolean>(false);
   clicked = output<string>();
 
   submitVote(optionId: string) {
+    if (this.isDisabled() || this.isPastSurvey()) return;
     this.clicked.emit(optionId);
   }
 

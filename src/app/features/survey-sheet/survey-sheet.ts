@@ -17,6 +17,7 @@ export class SurveySheet {
   surveyQuestions = this.questionService.questions;
   private route = inject(ActivatedRoute);
   isPastSurvey = input<boolean>(false);
+  isDisabled = input<boolean>(false);
 
   selectionChanged = output<{ questionId: string; optionIds: string[] }>();
 
