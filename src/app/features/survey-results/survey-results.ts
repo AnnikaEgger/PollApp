@@ -14,10 +14,12 @@ export class SurveyResults {
   options = input.required<Option[]>();
   question = input<Question | null>(null);
 
+  /** Returns the total vote count for the displayed options. */
   getTotalVotes(): number {
     return this.options().reduce((sum, opt) => sum + (opt.vote_count ?? 0), 0);
   }
 
+  /** Converts one option's vote count into a percentage. */
   computeVotesToPercentages(option: Option): number {
     const totalVotes = this.getTotalVotes();
     if (totalVotes === 0) {

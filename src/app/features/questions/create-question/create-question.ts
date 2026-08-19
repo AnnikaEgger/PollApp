@@ -18,16 +18,19 @@ export class CreateQuestion {
   deleteQuestion = output<void>();
   @ViewChild('createOption') createOptionComponent!: CreateOption;
 
+  /** Displays the question validation state. */
   showErrorMsg() {
     const control = this.getQuestionControl();
     this.isVisible = !control?.value?.trim();
   }
 
+  /** Clears question and option validation states. */
   resetSurveyQuestionErr() {
     this.isVisible = false;
     this.createOptionComponent.resetSurveyOptionErr();
   }
 
+  /** Displays validation states for the question and its options. */
   showAllErrors() {
     const control = this.getQuestionControl();
     this.isVisible = !control.value?.trim();
@@ -35,14 +38,17 @@ export class CreateQuestion {
     this.createOptionComponent.showAllErrors();
   }
 
+  /** Returns the question text control. */
   getTextControl() {
     return this.questionGroup().get('text');
   }
 
+  /** Returns the multiple-answer control. */
   get multipleAnswerControl() {
     return this.questionGroup().get('multiple_answers_allowed');
   }
 
+  /** Returns the question text control for validation. */
   getQuestionControl() {
     return this.questionGroup().get('text');
   }

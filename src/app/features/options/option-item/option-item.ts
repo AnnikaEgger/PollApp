@@ -17,49 +17,45 @@ export class OptionItem {
   isChecked = input<boolean>(false);
   clicked = output<string>();
 
+  /** Emits a selected option unless the survey is disabled. */
   submitVote(optionId: string) {
     if (this.isDisabled() || this.isPastSurvey()) return;
     this.clicked.emit(optionId);
   }
 
+  /** Legacy direct vote handler retained for option-level integrations. */
   async onOptionClicked(questionId: string, letter: string) {
     try {
-      const { data: currentData, error: fetchError } = await supabase
-        .from('questions')
-        .select('options')
-        .eq('id', questionId)
-        .single();
-
-      if (fetchError || !currentData) {
-        console.error('Fehler beim Laden der Optionen:', fetchError);
-        return;
-      }
-
-      const options: Option[] = currentData.options ?? [];
-
-      const updatedOptions = options.map((opt) => {
-        if (opt.letter === letter) {
-          return {
-            ...opt,
-            vote_count: (opt.vote_count ?? 0) + 1,
-          };
-        }
-        return opt;
-      });
-
-      const { error: updateError } = await supabase
-        .from('questions')
-        .update({ options: updatedOptions })
-        .eq('id', questionId);
-
-      if (updateError) {
-        console.error('Fehler beim Speichern der Stimme:', updateError);
-        return;
-      }
-
-      console.log(`Stimme für Frage ${questionId}, Option ${letter} erfolgreich gespeichert!`);
+      const { data: currentData, error: fetchError } = await this.fetchOptions(questionId);
+      if (!currentData || fetchError)
+        return console.error('Fehler beim Laden der Optionen:', fetchError);
+      await this.saveOptionVote(questionId, currentData.options ?? [], letter);
     } catch (err) {
       console.error('Unerwarteter Fehler bei onOptionClicked:', err);
     }
+  }
+
+  /** Applies and persists one direct option vote. */
+  private async saveOptionVote(questionId: string, options: Option[], letter: string) {
+    const { error } = await this.persistOptions(questionId, this.addVote(options, letter));
+    if (error) return console.error('Fehler beim Speichern der Stimme:', error);
+    console.log(`Stimme für Frage ${questionId}, Option ${letter} erfolgreich gespeichert!`);
+  }
+
+  /** Fetches the current options for a question. */
+  private fetchOptions(questionId: string) {
+    return supabase.from('questions').select('options').eq('id', questionId).single();
+  }
+
+  /** Persists updated options for a question. */
+  private persistOptions(questionId: string, options: Option[]) {
+    return supabase.from('questions').update({ options }).eq('id', questionId);
+  }
+
+  /** Adds one vote to the selected option. */
+  private addVote(options: Option[], letter: string): Option[] {
+    return options.map((option) =>
+      option.letter === letter ? { ...option, vote_count: (option.vote_count ?? 0) + 1 } : option,
+    );
   }
 }

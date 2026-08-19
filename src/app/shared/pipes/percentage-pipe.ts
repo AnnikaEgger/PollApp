@@ -5,6 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class PercentagePipe implements PipeTransform {
+  /** Formats a numeric value as a percentage string. */
   transform(value: number, decimals: number = 0): string {
     if (value === null || value === undefined) {
       return '0%';

@@ -31,6 +31,7 @@ export class CreateSurveyPage {
   isPublishedOverlayOpen: boolean = false;
   isSubmittingSurvey: boolean = false;
   lastCreatedSurveyId: number | null = null;
+  /** Creates the survey page with change detection support. */
   constructor(private cd: ChangeDetectorRef) {}
   @ViewChild('createSurvey') createSurveyComponent!: CreateSurvey;
   @ViewChildren(CreateQuestion) questionComponents!: QueryList<CreateQuestion>;
@@ -48,14 +49,17 @@ export class CreateSurveyPage {
     questions: new FormArray([]),
   });
 
+  /** Adds the initial question to a new survey. */
   ngOnInit() {
     this.addQuestion();
   }
 
+  /** Returns the survey question form array. */
   get questionsArr() {
     return this.surveyForm.get('questions') as FormArray;
   }
 
+  /** Adds a question with two initial options. */
   addQuestion() {
     const question = new FormGroup({
       order_index: new FormControl(this.questionsArr.length + 1),
@@ -69,6 +73,7 @@ export class CreateSurveyPage {
     this.addOption(questionIndex);
   }
 
+  /** Deletes a question or clears the only remaining question. */
   deleteQuestion(index: number) {
     if (this.questionsArr.length <= 1) {
       const question = this.questionsArr.at(index);
@@ -81,10 +86,12 @@ export class CreateSurveyPage {
     });
   }
 
+  /** Returns the option form array for a question. */
   getOptionsArr(questionIndex: number) {
     return this.questionsArr.at(questionIndex).get('options') as FormArray;
   }
 
+  /** Adds an option unless the maximum has been reached. */
   addOption(questionIndex: number) {
     const optionsArr = this.getOptionsArr(questionIndex);
     if (optionsArr.length >= 6) return;
@@ -96,6 +103,7 @@ export class CreateSurveyPage {
     optionsArr.push(option);
   }
 
+  /** Deletes an option or clears the final required options. */
   deleteOption(questionIndex: number, optionIndex: number) {
     const optionsArr = this.getOptionsArr(questionIndex);
     const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -110,6 +118,7 @@ export class CreateSurveyPage {
     });
   }
 
+  /** Validates and persists the complete survey. */
   async submitSurvey() {
     if (!this.canSubmitSurvey()) return;
     this.isSubmittingSurvey = true;
@@ -121,6 +130,7 @@ export class CreateSurveyPage {
     this.showOverlays();
   }
 
+  /** Shows the publish overlay before redirecting to the survey. */
   private showOverlays() {
     setTimeout(() => {
       this.isSubmittingSurvey = false;
@@ -132,6 +142,7 @@ export class CreateSurveyPage {
     }, 350);
   }
 
+  /** Returns whether the survey form can be submitted. */
   private canSubmitSurvey(): boolean {
     if (this.surveyForm.valid) return true;
     this.surveyForm.markAllAsTouched();
@@ -139,6 +150,7 @@ export class CreateSurveyPage {
     return false;
   }
 
+  /** Normalizes optional survey values for persistence. */
   private normalizeSurveyPayload(value: any) {
     return {
       ...value,
@@ -147,35 +159,42 @@ export class CreateSurveyPage {
     };
   }
 
+  /** Inserts every question belonging to a newly created survey. */
   private async insertQuestions(questions: any[], surveyId: number) {
-    for (let i = 0; i < questions.length; i++) {
-      const q = questions[i];
-
-      const questionPayload: QuestionInsert = {
-        survey_id: surveyId.toString(),
-        number: q.number ?? i + 1,
-        text: q.text,
-        multiple_answers_allowed: q.multiple_answers_allowed ?? q.multiple_answers_allowed ?? false,
-        options: q.options.map((o: any, index: number) => ({
-          letter: String.fromCharCode(65 + index),
-          text: typeof o === 'string' ? o : o.text,
-          vote_count: 0,
-        })),
-      };
-
-      await this.questionService.insertQuestion(questionPayload);
+    for (let index = 0; index < questions.length; index++) {
+      await this.questionService.insertQuestion(
+        this.toQuestionPayload(questions[index], surveyId, index),
+      );
     }
   }
 
+  /** Converts a form question into the service insert shape. */
+  private toQuestionPayload(question: any, surveyId: number, index: number): QuestionInsert {
+    return {
+      survey_id: surveyId.toString(),
+      number: question.number ?? index + 1,
+      text: question.text,
+      multiple_answers_allowed: question.multiple_answers_allowed ?? false,
+      options: question.options.map((option: any, optionIndex: number) => ({
+        letter: String.fromCharCode(65 + optionIndex),
+        text: typeof option === 'string' ? option : option.text,
+        vote_count: 0,
+      })),
+    };
+  }
+
+  /** Closes the publish overlay and opens the created survey. */
   closePublishedOverlay() {
     this.isPublishedOverlayOpen = false;
     this.redirectToSurveyDetails(this.lastCreatedSurveyId!);
   }
 
+  /** Navigates to a survey detail page. */
   redirectToSurveyDetails(id: number) {
     this.router.navigate(['/survey', id]);
   }
 
+  /** Resets and closes the create-survey modal. */
   closeCreateSurveyModal() {
     this.surveyForm.reset();
     this.createSurveyComponent.resetSurveyNameErr();
@@ -186,6 +205,7 @@ export class CreateSurveyPage {
     this.close.emit();
   }
 
+  /** Displays validation errors across all survey fields. */
   showAllCustomErrors() {
     this.createSurveyComponent.showAllErrors();
     this.questionComponents.forEach((cmp) => {
@@ -193,34 +213,42 @@ export class CreateSurveyPage {
     });
   }
 
+  /** Returns the options form array from a question control. */
   getOptions(q: AbstractControl): FormArray {
     return q.get('options') as FormArray;
   }
 
+  /** Clears the survey end-date control. */
   onClearSurveyDatum() {
     this.surveyForm.get('end_date')!.setValue('');
   }
 
+  /** Clears the survey title control. */
   onClearSurveyName() {
     this.surveyForm.get('title')!.setValue('');
   }
 
+  /** Clears the survey description control. */
   onClearSurveyDescription() {
     this.surveyForm.get('description')!.setValue('');
   }
 
+  /** Returns the survey title control. */
   get titleControl(): FormControl {
     return this.surveyForm.get('title') as FormControl;
   }
 
+  /** Returns the survey end-date control. */
   get datumControl(): FormControl {
     return this.surveyForm.get('end_date') as FormControl;
   }
 
+  /** Returns the survey description control. */
   get descriptionControl(): FormControl {
     return this.surveyForm.get('description') as FormControl;
   }
 
+  /** Returns the survey category control. */
   get categoryControl(): FormControl {
     return this.surveyForm.get('category') as FormControl;
   }

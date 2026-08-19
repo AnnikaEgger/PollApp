@@ -21,6 +21,7 @@ export class SurveySheet {
 
   selectionChanged = output<{ questionId: string; optionIds: string[] }>();
 
+  /** Loads the survey and its questions when the sheet initializes. */
   ngOnInit() {
     let currentId = String(this.route.snapshot.paramMap.get('id'));
     currentId = '5';
@@ -31,10 +32,12 @@ export class SurveySheet {
     }
   }
 
+  /** Returns the published or draft status label. */
   getPublishLabel(): string {
     return this.surveyDetails()?.published ? 'Published' : 'Draft';
   }
 
+  /** Formats the survey end date for display. */
   formatEndDate() {
     const serverDate = this.surveyDetails()?.end_date;
     if (!serverDate) {
@@ -48,6 +51,7 @@ export class SurveySheet {
     }).format(date);
   }
 
+  /** Forwards a local answer selection to the survey page. */
   async handleSelection(event: { questionId: string; optionIds: string[] }) {
     this.selectionChanged.emit(event);
   }

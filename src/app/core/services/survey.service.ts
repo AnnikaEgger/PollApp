@@ -10,14 +10,17 @@ export class SurveyService {
   surveyChannel: RealtimeChannel | null = null;
   dialogIsOpen = signal<boolean>(false);
 
+  /** Loads all surveys when the service is created. */
   constructor() {
     this.getAllSurveys();
   }
 
+  /** Opens or closes the create-survey dialog. */
   toggleCreateSurveyDialog() {
     this.dialogIsOpen.update((value) => !value);
   }
 
+  /** Loads all surveys from Supabase. */
   async getAllSurveys() {
     try {
       let { data: surveys, error } = await supabase.from('surveys').select('*');
@@ -28,6 +31,7 @@ export class SurveyService {
     }
   }
 
+  /** Loads one survey by its identifier. */
   async getSingleSurvey(id: string) {
     try {
       let { data: survey, error } = await supabase
@@ -44,17 +48,12 @@ export class SurveyService {
     }
   }
 
+  /** Inserts a published survey and returns the created row. */
   async insertSurvey(survey: any) {
     try {
       const { data, error } = await supabase
         .from('surveys')
-        .insert({
-          title: survey.title,
-          description: survey.description,
-          category: survey.category,
-          end_date: survey.end_date,
-          published: true,
-        })
+        .insert(this.toSurveyRow(survey))
         .select();
       if (error) {
         console.error('Supabase error at insertSurvey:', error);
@@ -64,5 +63,16 @@ export class SurveyService {
     } catch (err) {
       console.error('Unexpected JS runtime error at insertSurvey:', err);
     }
+  }
+
+  /** Selects the fields required for a published survey row. */
+  private toSurveyRow(survey: any) {
+    return {
+      title: survey.title,
+      description: survey.description,
+      category: survey.category,
+      end_date: survey.end_date,
+      published: true,
+    };
   }
 }

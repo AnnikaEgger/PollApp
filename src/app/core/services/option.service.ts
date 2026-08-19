@@ -9,6 +9,7 @@ export class OptionService {
   questionService = inject(QuestionService);
   questions = this.questionService.questions;
 
+  /** Loads options for one question. */
   async getOptionsForQuestion(questionId: string): Promise<Option[]> {
     const { data, error } = await supabase
       .from('questions')
@@ -24,69 +25,66 @@ export class OptionService {
     return data?.options ?? [];
   }
 
+  /** Loads and normalizes every option belonging to a survey. */
   async getOptionsForSurvey(surveyId: string): Promise<void> {
     try {
-      const { data, error } = await supabase
-        .from('questions')
-        .select('options')
-        .eq('survey_id', surveyId);
-
+      const { data, error } = await this.fetchSurveyOptions(surveyId);
       if (error) {
         console.error('getOptionsForSurvey error:', error);
         this.options.set([]);
         return;
       }
 
-      const allOptions = (data ?? []).flatMap((q) => q.options ?? []);
-
-      const mappedOptions = allOptions.map((opt: any, index: number) => ({
-        ...opt,
-        letter: String.fromCharCode(65 + index),
-      }));
-
-      this.options.set(mappedOptions as Option[]);
+      this.options.set(this.mapOptions(data ?? []));
     } catch (err) {
       console.error('Unexpected error in getOptionsForSurvey:', err);
       this.options.set([]);
     }
   }
 
+  /** Fetches all question option arrays for a survey. */
+  private fetchSurveyOptions(surveyId: string) {
+    return supabase.from('questions').select('options').eq('survey_id', surveyId);
+  }
+
+  /** Appends an option to a question and persists the updated option list. */
   async insertOptions(optionText: string, questionId: number): Promise<boolean> {
     try {
-      const { data: question, error: fetchError } = await supabase
-        .from('questions')
-        .select('options')
-        .eq('id', questionId)
-        .single();
-
-      if (fetchError) {
-        console.error('Supabase error at insertOptions (fetch):', fetchError);
-        return false;
-      }
-
-      const currentOptions = question?.options ?? [];
-
-      const updatedOptions = [
-        ...currentOptions,
-        {
-          text: optionText,
-        },
-      ];
-
-      const { error } = await supabase
-        .from('questions')
-        .update({ options: updatedOptions })
-        .eq('id', questionId);
-
-      if (error) {
-        console.error('Supabase error at insertOptions (update):', error);
-        return false;
-      }
-
-      return true;
+      const options = await this.fetchQuestionOptions(questionId);
+      return options
+        ? this.updateQuestionOptions(questionId, [...options, { text: optionText }])
+        : false;
     } catch (err) {
       console.error('Unexpected JS runtime error at insertOptions', err);
       return false;
     }
+  }
+
+  /** Maps database options to stable lettered option values. */
+  private mapOptions(questions: any[]): Option[] {
+    return questions
+      .flatMap((q) => q.options ?? [])
+      .map((opt: any, index: number) => ({
+        ...opt,
+        letter: String.fromCharCode(65 + index),
+      })) as Option[];
+  }
+
+  /** Fetches the current options for one question. */
+  private async fetchQuestionOptions(questionId: number): Promise<any[] | null> {
+    const { data, error } = await supabase
+      .from('questions')
+      .select('options')
+      .eq('id', questionId)
+      .single();
+    if (error) console.error('Supabase error at insertOptions (fetch):', error);
+    return error ? null : (data?.options ?? []);
+  }
+
+  /** Persists a question's complete option list. */
+  private async updateQuestionOptions(questionId: number, options: any[]): Promise<boolean> {
+    const { error } = await supabase.from('questions').update({ options }).eq('id', questionId);
+    if (error) console.error('Supabase error at insertOptions (update):', error);
+    return !error;
   }
 }

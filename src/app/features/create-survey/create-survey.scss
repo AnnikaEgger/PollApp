@@ -33,8 +33,6 @@
 }
 
 .create-survey__field {
-  // @include flex-column-space-btw;
-
   flex: 1;
 }
 
@@ -53,7 +51,6 @@
 }
 
 .create-survey__row {
-  // @include flex-space-btw;
   display: flex;
   gap: 16px;
 }

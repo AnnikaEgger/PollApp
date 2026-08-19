@@ -19,14 +19,17 @@ export class LandingPage {
 
   @ViewChild('createSurveyModal') modal!: ElementRef<HTMLDialogElement>;
 
+  /** Loads the catalog and listens for modal close events. */
   ngOnInit() {
     document.body.setAttribute('data-page', 'landing');
   }
 
+  /** Removes the modal close subscription. */
   ngOnDestroy() {
     document.body.removeAttribute('data-page');
   }
 
+  /** Opens the create-survey modal. */
   openCreateSurveyModal() {
     this.isCreateSurveyOpen = true;
   }

@@ -46,6 +46,7 @@ export class SurveyPage {
     }),
   );
 
+  /** Loads the survey, questions, and browser vote state. */
   ngOnInit() {
     this.route.paramMap.subscribe(async (params) => {
       const surveyId = params.get('id');
@@ -57,6 +58,7 @@ export class SurveyPage {
     });
   }
 
+  /** Loads the survey end date after the view initializes. */
   async ngAfterViewInit() {
     const surveyId = this.route.snapshot.paramMap.get('id')!;
 
@@ -68,6 +70,7 @@ export class SurveyPage {
     }
   }
 
+  /** Updates the expired state from a survey end date. */
   private computeIsPast(endDate: string) {
     if (!endDate) {
       this.isPastSurvey = false;
@@ -80,15 +83,18 @@ export class SurveyPage {
     this.isPastSurvey = end < today;
   }
 
+  /** Returns options belonging to a question. */
   optionsForQuestion(qId: number | string) {
     const question = this.questions().find((q) => q.id == qId);
     return question?.options ?? [];
   }
 
+  /** Indicates whether persisted votes exist. */
   hasVotes() {
     return this.questions().some((q) => q.options?.some((o: any) => (o.vote_count || 0) > 0));
   }
 
+  /** Indicates whether local selections exist. */
   hasLocalVotes() {
     for (const optionIds of this.answers().values()) {
       if (optionIds.length > 0) return true;
@@ -96,23 +102,25 @@ export class SurveyPage {
     return false;
   }
 
+  /** Persists the current selections and marks this browser as completed. */
   async completeSurvey() {
     const surveyId = this.route.snapshot.paramMap.get('id')!;
     if (!surveyId) return;
-
-    for (const [questionId, selectedLetters] of this.answers().entries()) {
-      if (selectedLetters.length > 0) {
-        await this.voteService.voteForOptions(questionId, selectedLetters);
-      }
-    }
-
+    await this.persistAnswers();
     localStorage.setItem(`survey_voted_${surveyId}`, 'true');
     this.userHasVoted = true;
     this.answers.set(new Map<string, string[]>());
-
     await this.questionService.getQuestionsForSurvey(surveyId);
   }
 
+  /** Sends every non-empty local answer to the vote service. */
+  private async persistAnswers() {
+    for (const [questionId, letters] of this.answers().entries()) {
+      if (letters.length > 0) await this.voteService.voteForOptions(questionId, letters);
+    }
+  }
+
+  /** Stores a changed question selection in local state. */
   onSelectionChanged(event: { questionId: string; optionIds: string[] }) {
     this.answers.update((answers) => {
       const updatedAnswers = new Map(answers);
@@ -121,6 +129,7 @@ export class SurveyPage {
     });
   }
 
+  /** Opens the create-survey modal. */
   openCreateSurveyModal() {
     this.isCreateSurveyOpen = true;
   }

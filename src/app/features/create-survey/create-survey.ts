@@ -24,20 +24,24 @@ export class CreateSurvey {
   clearSurveyDesctiption = output<void>();
   descriptionControl = input.required<FormControl>();
 
+  /** Displays the survey-name validation state. */
   showErrorMsg() {
     const control = this.titleControl();
     this.isVisible = !control?.value?.trim();
   }
 
+  /** Clears the survey-name validation state. */
   resetSurveyNameErr() {
     this.isVisible = false;
   }
 
+  /** Resets the selected category and its validation state. */
   resetCategory() {
     this.selectedCategory = '';
     this.categoryErrorVisible = false;
   }
 
+  /** Updates the selected category and clears its error state. */
   onCategorySelected(value: string | null) {
     this.selectedCategory = value;
     if (value) {
@@ -45,6 +49,7 @@ export class CreateSurvey {
     }
   }
 
+  /** Displays all validation messages for the survey header. */
   showAllErrors() {
     const title = this.titleControl();
     const category = this.categoryControl();

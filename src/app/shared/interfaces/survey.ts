@@ -1,5 +1,3 @@
-import { categoriesLiteral } from '../../shared/literals/literals';
-
 export interface Answer {
   text: string;
   vote_count: number;
@@ -19,7 +17,7 @@ export interface QuestionDB extends Question {
 
 export interface Survey {
   title: string;
-  category: categoriesLiteral;
+  category: string;
   description: string;
   end_date: string;
 }

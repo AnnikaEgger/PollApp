@@ -8,47 +8,30 @@ export class QuestionService {
   questions = signal<Question[]>([]);
   questionChannel: RealtimeChannel | null = null;
 
+  /** Loads questions for a survey and assigns display numbers. */
   async getQuestionsForSurvey(surveyId: string) {
     try {
       let { data: questions, error } = await supabase
         .from('questions')
         .select('*')
         .eq('survey_id', surveyId);
-
       if (error) {
         console.error('getQuestionsForSurvey error:', error);
         this.questions.set([]);
         return;
       }
-
-      const mappedQuestions = (questions ?? []).map((q, index) => ({
-        ...q,
-        number: index + 1,
-      }));
-
-      this.questions.set(mappedQuestions as Question[]);
+      this.questions.set(this.numberQuestions(questions ?? []));
     } catch (err) {
       console.error('Unexpected error in getQuestionsForSurvey', err);
     }
   }
 
+  /** Inserts one question with normalized, lettered options. */
   async insertQuestion(question: QuestionInsert) {
     try {
-      const formattedOptions = (question.options || []).map((o: any, index: number) => ({
-        text: typeof o === 'string' ? o : o.text,
-        letter: String.fromCharCode(65 + index),
-        vote_count: typeof o === 'string' ? 0 : (o.vote_count ?? 0),
-      }));
-
       const { data, error } = await supabase
         .from('questions')
-        .insert({
-          survey_id: question.survey_id,
-          number: question.number,
-          text: question.text,
-          multiple_answers_allowed: question.multiple_answers_allowed,
-          options: formattedOptions,
-        })
+        .insert(this.toDatabaseQuestion(question))
         .select();
 
       if (error) {
@@ -61,43 +44,49 @@ export class QuestionService {
     }
   }
 
+  /** Updates persisted vote counts for selected options. */
   async updateVotesForQuestion(questionId: string, selectedLetters: string[]) {
     try {
-      const { data, error: fetchError } = await supabase
+      const { data, error } = await supabase
         .from('questions')
         .select('options')
         .eq('id', questionId)
         .single();
-
-      if (fetchError || !data) {
-        console.error('Fehler beim Laden der Optionen für Vote-Update:', fetchError);
-        return;
-      }
-
-      const rawOptions = data.options ?? [];
-
-      const updatedOptions = rawOptions.map((opt: any, index: number) => {
-        const currentLetter = String.fromCharCode(65 + index);
-
-        if (selectedLetters.includes(currentLetter)) {
-          return {
-            ...opt,
-            vote_count: (opt.vote_count ?? 0) + 1,
-          };
-        }
-        return opt;
-      });
-
-      const { error: updateError } = await supabase
-        .from('questions')
-        .update({ options: updatedOptions })
-        .eq('id', questionId);
-
-      if (updateError) {
-        console.error('Fehler beim Speichern der Stimme:', updateError);
-      }
+      if (error || !data)
+        return console.error('Fehler beim Laden der Optionen für Vote-Update:', error);
+      const options = this.applyVotes(data.options ?? [], selectedLetters);
+      const result = await supabase.from('questions').update({ options }).eq('id', questionId);
+      if (result.error) console.error('Fehler beim Speichern der Stimme:', result.error);
     } catch (err) {
       console.error('Unerwarteter Fehler im QuestionService:', err);
     }
+  }
+
+  /** Adds one vote to each selected option. */
+  private applyVotes(options: any[], selectedLetters: string[]) {
+    return options.map((option, index) => ({
+      ...option,
+      letter: String.fromCharCode(65 + index),
+      vote_count:
+        (option.vote_count ?? 0) +
+        (selectedLetters.includes(String.fromCharCode(65 + index)) ? 1 : 0),
+    }));
+  }
+
+  /** Adds display numbers to questions returned by Supabase. */
+  private numberQuestions(questions: any[]): Question[] {
+    return questions.map((question, index) => ({ ...question, number: index + 1 })) as Question[];
+  }
+
+  /** Converts an application question into the database insert shape. */
+  private toDatabaseQuestion(question: QuestionInsert) {
+    return {
+      ...question,
+      options: question.options.map((option: any, index) => ({
+        text: typeof option === 'string' ? option : option.text,
+        letter: String.fromCharCode(65 + index),
+        vote_count: typeof option === 'string' ? 0 : (option.vote_count ?? 0),
+      })),
+    };
   }
 }

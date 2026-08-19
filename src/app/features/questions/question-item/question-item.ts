@@ -21,16 +21,19 @@ export class QuestionItem implements OnInit, OnDestroy {
   selectedOptions = signal<string[]>([]);
   selectedChange = output<{ questionId: string; optionIds: string[] }>();
 
+  /** Loads the initial options and starts realtime updates. */
   async ngOnInit() {
     this.loadOptionsFromQuestion();
 
     this.listenForOptionUpdates();
   }
 
+  /** Stops the realtime option subscription. */
   ngOnDestroy() {
     this.stopListeningForOptionUpdates();
   }
 
+  /** Maps the question's initial options into the local signal. */
   loadOptionsFromQuestion() {
     const rawOptions = this.question().options ?? [];
     const mappedOptions = rawOptions.map((opt: any, index: number) => ({
@@ -40,12 +43,17 @@ export class QuestionItem implements OnInit, OnDestroy {
     this.options.set(mappedOptions);
   }
 
+  /** Subscribes to realtime option changes for this question. */
   listenForOptionUpdates() {
     if (this.optionChannel) {
       this.stopListeningForOptionUpdates();
     }
+    this.optionChannel = this.createOptionChannel();
+  }
 
-    this.optionChannel = supabase
+  /** Creates the realtime channel used by this question. */
+  private createOptionChannel(): RealtimeChannel {
+    return supabase
       .channel(`question-options-${this.question().id}`)
       .on(
         'postgres_changes',
@@ -55,21 +63,20 @@ export class QuestionItem implements OnInit, OnDestroy {
           table: 'questions',
           filter: `id=eq.${this.question().id}`,
         },
-        (payload) => {
-          const updatedQuestion = payload.new as any;
-          const rawOptions = updatedQuestion?.options ?? [];
-
-          const mappedOptions = rawOptions.map((opt: any, index: number) => ({
-            ...opt,
-            letter: String.fromCharCode(65 + index),
-          }));
-
-          this.options.set(mappedOptions);
-        },
+        (payload) => this.options.set(this.mapOptions((payload.new as any)?.options ?? [])),
       )
       .subscribe();
   }
 
+  /** Maps realtime option data to stable lettered options. */
+  private mapOptions(rawOptions: any[]): Option[] {
+    return rawOptions.map((option, index) => ({
+      ...option,
+      letter: String.fromCharCode(65 + index),
+    }));
+  }
+
+  /** Unsubscribes from realtime option changes. */
   stopListeningForOptionUpdates() {
     if (this.optionChannel) {
       this.optionChannel.unsubscribe();
@@ -77,10 +84,12 @@ export class QuestionItem implements OnInit, OnDestroy {
     }
   }
 
+  /** Indicates whether multiple answers are allowed. */
   isMultipleAllowed(): boolean {
     return this.question().multiple_answers_allowed === true;
   }
 
+  /** Updates the local selection and emits it to the survey sheet. */
   onOptionClicked(letter: string) {
     if (this.isMultipleAllowed()) {
       this.selectedOptions.update((list) =>
