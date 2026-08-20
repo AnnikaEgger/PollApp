@@ -50,6 +50,14 @@
   }
 }
 
+.create-survey__delete-btn-row {
+  @include flex-space-btw;
+
+  app-delete-btn {
+    display: none;
+  }
+}
+
 .create-survey__row {
   display: flex;
   gap: 16px;
@@ -59,6 +67,7 @@
   .create-survey__upper {
     flex-direction: column;
     gap: 24px;
+    padding-top: 32px;
   }
 
   .create-survey__row {
@@ -79,15 +88,30 @@
     width: 100%;
   }
 
-  .create-survey__input-row input,
-  .create-survey__input-row textarea {
-    flex: 1;
-    width: 100%;
-  }
-}
+  .create-survey__input-row {
+    padding: 0px 8px;
 
-@media screen and (max-width: 768px) {
-  .create-survey__row {
-    padding: 0 8px;
+    input,
+    textarea {
+      flex: 1;
+      width: 100%;
+    }
+  }
+
+  .create-survey__label {
+    padding-left: 8px;
+  }
+
+  .create-survey__delete-btn-row {
+    app-delete-btn {
+      display: unset;
+      margin-right: 8px;
+    }
+  }
+
+  .create-survey__input-row {
+    app-delete-btn {
+      display: none;
+    }
   }
 }

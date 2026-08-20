@@ -26,6 +26,8 @@ export class SurveyPage {
   isCreateSurveyOpen: boolean = false;
   showResultsMobile: boolean = true;
   userHasVoted: boolean = false;
+  isSubmittingSurvey: boolean = false;
+  isSurveySubmitted: boolean = false;
   answers = signal(new Map<string, string[]>());
   displayedQuestions = computed(() =>
     this.questions().map((question) => {
@@ -105,19 +107,34 @@ export class SurveyPage {
   /** Persists the current selections and marks this browser as completed. */
   async completeSurvey() {
     const surveyId = this.route.snapshot.paramMap.get('id')!;
-    if (!surveyId) return;
-    await this.persistAnswers();
+    if (!surveyId || this.isSubmittingSurvey || this.userHasVoted) return;
+
+    this.isSubmittingSurvey = true;
+    const wasPersisted = await this.persistAnswers();
+    this.isSubmittingSurvey = false;
+    if (!wasPersisted) return;
+
     localStorage.setItem(`survey_voted_${surveyId}`, 'true');
     this.userHasVoted = true;
     this.answers.set(new Map<string, string[]>());
     await this.questionService.getQuestionsForSurvey(surveyId);
+    this.isSurveySubmitted = true;
   }
 
   /** Sends every non-empty local answer to the vote service. */
-  private async persistAnswers() {
+  private async persistAnswers(): Promise<boolean> {
     for (const [questionId, letters] of this.answers().entries()) {
-      if (letters.length > 0) await this.voteService.voteForOptions(questionId, letters);
+      if (letters.length > 0) {
+        const wasPersisted = await this.voteService.voteForOptions(questionId, letters);
+        if (!wasPersisted) return false;
+      }
     }
+    return true;
+  }
+
+  /** Closes the submission feedback overlay. */
+  closeSubmissionOverlay() {
+    this.isSurveySubmitted = false;
   }
 
   /** Stores a changed question selection in local state. */

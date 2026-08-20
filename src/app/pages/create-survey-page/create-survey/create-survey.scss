@@ -9,7 +9,7 @@
   min-height: 100dvh;
   height: auto;
   z-index: 999;
-  background-color: white;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .create-survey {
@@ -51,10 +51,10 @@
     justify-content: unset;
     gap: 40px;
     font-family: var(--font-text-bold);
+  }
 
-    label {
-      margin-bottom: 8px;
-    }
+  &__label {
+    margin-bottom: 16px;
   }
 
   &__add-question-btn {
@@ -249,12 +249,16 @@
     }
   }
 
+  .container--create-survey {
+    padding: 0;
+  }
+
   .create-survey__main {
-    padding: 20px;
+    padding: 16px;
   }
 
   .create-survey__body {
-    padding: 20px;
+    padding: 8px;
   }
 }
 

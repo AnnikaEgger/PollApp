@@ -16,13 +16,19 @@
   margin-bottom: 120px;
 }
 
-@media (max-width: 700px) {
+@media screen and (max-width: 1000px) {
+  .centered-section {
+    padding: 32px;
+  }
+}
+
+@media screen and (max-width: 700px) {
   .centered-section {
     padding: 0;
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 480px) {
   .container {
     padding: 8px;
   }

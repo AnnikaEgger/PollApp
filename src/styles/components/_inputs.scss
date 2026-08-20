@@ -23,6 +23,7 @@
   @include input-no-focus;
   @include thin-scrollbar;
   flex: 1;
+  margin-bottom: 16px;
 }
 
 .survey__input--standard-width {
@@ -37,8 +38,12 @@
   width: 150px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .survey__input--medium-width {
+    width: 100%;
+  }
+
+  .survey__input--small-width {
     width: 100%;
   }
 }

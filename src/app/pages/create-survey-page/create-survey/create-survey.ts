@@ -10,7 +10,7 @@ import {
 import { SurveyService } from '../../../core/services/survey.service';
 import { QuestionService } from '../../../core/services/question.service';
 import { OptionService } from '../../../core/services/option.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CreateSurvey } from '../../../features/create-survey/create-survey';
 import { CreateQuestion } from '../../../features/questions/create-question/create-question';
 import { ChangeDetectorRef } from '@angular/core';
@@ -18,7 +18,7 @@ import { Question, QuestionInsert } from '../../../core/interfaces/question.inte
 
 @Component({
   selector: 'app-create-survey-page',
-  imports: [ReactiveFormsModule, CreateSurvey, CreateQuestion],
+  imports: [ReactiveFormsModule, CreateSurvey, CreateQuestion, RouterLink],
   templateUrl: './create-survey.html',
   styleUrl: './create-survey.scss',
 })
@@ -120,6 +120,7 @@ export class CreateSurveyPage {
 
   /** Validates and persists the complete survey. */
   async submitSurvey() {
+    if (!this.datumControl.value) this.datumControl.setValue(this.getTomorrowDate());
     if (!this.canSubmitSurvey()) return;
     this.isSubmittingSurvey = true;
     const formValue = this.normalizeSurveyPayload(this.surveyForm.value);
@@ -144,7 +145,7 @@ export class CreateSurveyPage {
 
   /** Returns whether the survey form can be submitted. */
   private canSubmitSurvey(): boolean {
-    if (this.surveyForm.valid) return true;
+    if (this.surveyForm.valid && this.titleControl.value?.trim()) return true;
     this.surveyForm.markAllAsTouched();
     this.showAllCustomErrors();
     return false;
@@ -231,6 +232,13 @@ export class CreateSurveyPage {
   /** Clears the survey description control. */
   onClearSurveyDescription() {
     this.surveyForm.get('description')!.setValue('');
+  }
+
+  /** Returns tomorrow as a date-input-compatible value. */
+  private getTomorrowDate(): string {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
   }
 
   /** Returns the survey title control. */

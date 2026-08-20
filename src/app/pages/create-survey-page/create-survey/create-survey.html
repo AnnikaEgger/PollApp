@@ -1,8 +1,5 @@
 <dialog class="create-survey-dialog" [open]="surveyService.dialogIsOpen()">
-  <div class="container">
-    <header class="survey-create-main-header">
-      <img class="survey-create-logo" src="assets/images/ui/logo_dark.svg" alt="Pollapp Logo" />
-    </header>
+  <div class="container container--create-survey">
     <main class="create-survey__main">
       <section class="create-survey__form">
         <p class="create-survey__badge badge">Draft</p>
@@ -10,6 +7,7 @@
           <h1 class="create-survey__title">Create new survey</h1>
           <button
             (click)="surveyService.dialogIsOpen.set(false)"
+            routerLink=""
             class="btn-quaternary create-survey__cancel-btn"
           >
             Cancel
