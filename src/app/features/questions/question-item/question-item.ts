@@ -51,7 +51,9 @@ export class QuestionItem implements OnInit, OnDestroy {
     this.optionChannel = this.createOptionChannel();
   }
 
-  /** Creates the realtime channel used by this question. */
+  /** Creates the realtime channel used by this question.
+   * @returns The realtime option channel.
+   */
   private createOptionChannel(): RealtimeChannel {
     return supabase
       .channel(`question-options-${this.question().id}`)
@@ -68,7 +70,10 @@ export class QuestionItem implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  /** Maps realtime option data to stable lettered options. */
+  /** Maps realtime option data to stable lettered options.
+   * @param rawOptions The raw option values.
+   * @returns The lettered option values.
+   */
   private mapOptions(rawOptions: any[]): Option[] {
     return rawOptions.map((option, index) => ({
       ...option,
@@ -84,12 +89,16 @@ export class QuestionItem implements OnInit, OnDestroy {
     }
   }
 
-  /** Indicates whether multiple answers are allowed. */
+  /** Indicates whether multiple answers are allowed.
+   * @returns Whether multiple answers are allowed.
+   */
   isMultipleAllowed(): boolean {
     return this.question().multiple_answers_allowed === true;
   }
 
-  /** Updates the local selection and emits it to the survey sheet. */
+  /** Updates the local selection and emits it to the survey sheet.
+   * @param letter The selected option letter.
+   */
   onOptionClicked(letter: string) {
     if (this.isMultipleAllowed()) {
       this.selectedOptions.update((list) =>

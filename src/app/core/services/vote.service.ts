@@ -7,7 +7,9 @@ import { supabase } from './supabase.client';
 export class VoteService {
   surveyQuestions = signal<any[]>([]);
 
-  /** Loads persisted question vote data for a survey. */
+  /** Loads persisted question vote data for a survey.
+   * @param surveyId The survey identifier.
+   */
   async getVotesForSurvey(surveyId: number | string) {
     try {
       const { data, error } = await this.fetchSurveyVotes(surveyId);
@@ -24,7 +26,11 @@ export class VoteService {
     }
   }
 
-  /** Persists one submitted vote for the selected option letters. */
+  /** Persists one submitted vote for the selected option letters.
+   * @param questionId The question identifier.
+   * @param selectedLetters The selected option letters.
+   * @returns Whether the vote was persisted.
+   */
   async voteForOptions(questionId: number | string, selectedLetters: string[]) {
     try {
       const { data: questionData, error: fetchError } = await this.fetchQuestion(questionId);
@@ -40,24 +46,38 @@ export class VoteService {
     }
   }
 
-  /** Fetches one question for vote persistence. */
+  /** Fetches one question for vote persistence.
+   * @param questionId The question identifier.
+   * @returns The Supabase query for the question options.
+   */
   private fetchQuestion(questionId: number | string) {
     return supabase.from('questions').select('options').eq('id', questionId).single();
   }
 
-  /** Fetches all questions used by the results view. */
+  /** Fetches all questions used by the results view.
+   * @param surveyId The survey identifier.
+   * @returns The Supabase query for survey questions.
+   */
   private fetchSurveyVotes(surveyId: number | string) {
     return supabase.from('questions').select('*').eq('survey_id', surveyId);
   }
 
-  /** Writes updated option counts to the database. */
+  /** Writes updated option counts to the database.
+   * @param questionId The question identifier.
+   * @param options The options with updated counts.
+   * @returns Whether the updated counts were persisted.
+   */
   private async persistVotes(questionId: number | string, options: any[]): Promise<boolean> {
     const { error } = await supabase.from('questions').update({ options }).eq('id', questionId);
     if (error) console.error('Supabase error updating vote counts:', error);
     return !error;
   }
 
-  /** Returns options with submitted votes added to their counts. */
+  /** Returns options with submitted votes added to their counts.
+   * @param options The options to update.
+   * @param selectedLetters The selected option letters.
+   * @returns The options with updated vote counts.
+   */
   private applyVotes(options: any[], selectedLetters: string[]) {
     return options.map((option, index) => {
       const letter = String.fromCharCode(65 + index);

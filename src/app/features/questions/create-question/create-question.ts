@@ -1,4 +1,5 @@
 import { Component, input, output, ViewChild } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
 import { DeleteButton } from '../../../shared/components/delete-button/delete-button';
 import { CreateOption } from '../../options/create-option/create-option';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -24,6 +25,15 @@ export class CreateQuestion {
     this.isVisible = !control?.value?.trim();
   }
 
+  /** Truncates pasted question text to the configured maximum length. */
+  trimQuestionToMaxLength() {
+    const control = this.getQuestionControl() as AbstractControl;
+    const value = control.value;
+    if (typeof value === 'string' && value.length > 100) {
+      control.setValue(value.slice(0, 100));
+    }
+  }
+
   /** Clears question and option validation states. */
   resetSurveyQuestionErr() {
     this.isVisible = false;
@@ -38,17 +48,23 @@ export class CreateQuestion {
     this.createOptionComponent.showAllErrors();
   }
 
-  /** Returns the question text control. */
+  /** Returns the question text control.
+   * @returns The question text form control.
+   */
   getTextControl() {
     return this.questionGroup().get('text');
   }
 
-  /** Returns the multiple-answer control. */
+  /** Returns the multiple-answer control.
+   * @returns The multiple-answer form control.
+   */
   get multipleAnswerControl() {
     return this.questionGroup().get('multiple_answers_allowed');
   }
 
-  /** Returns the question text control for validation. */
+  /** Returns the question text control for validation.
+   * @returns The question text form control.
+   */
   getQuestionControl() {
     return this.questionGroup().get('text');
   }

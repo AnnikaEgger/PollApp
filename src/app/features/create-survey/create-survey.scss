@@ -60,7 +60,7 @@
 
 .create-survey__row {
   display: flex;
-  gap: 16px;
+  gap: 8px;
 }
 
 @media (max-width: 1000px) {
@@ -76,7 +76,7 @@
 
   .create-survey__dropdown {
     align-self: flex-start;
-    margin-bottom: 24px;
+    margin-bottom: 0px;
   }
 
   .create-survey__upper,

@@ -32,7 +32,12 @@
       ></app-survey-sheet>
 
       @if (!userHasVoted && !isPastSurvey) {
-        <button (click)="completeSurvey()" class="survey__btn btn btn--primary">
+        <button
+          (click)="completeSurvey()"
+          class="survey__btn btn btn--primary"
+          [class.btn--disabled]="!hasAnsweredEveryQuestion()"
+          [disabled]="!hasAnsweredEveryQuestion()"
+        >
           Complete survey
         </button>
       } @else {

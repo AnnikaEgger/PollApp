@@ -9,8 +9,9 @@
       <div class="create-survey__input-row">
         <input
           type="text"
+          maxlength="60"
           class="survey__input--standard-width survey__input--card"
-          (blur)="showErrorMsg()"
+          (blur)="trimToMaxLength(titleControl(), 80); showErrorMsg()"
           (input)="showErrorMsg()"
           [formControl]="titleControl()"
         />
@@ -31,7 +32,7 @@
             [formControl]="datumControl()"
             [min]="today"
             type="date"
-            onkeydown="return false;"
+            (click)="$event.target.showPicker()"
             class="survey__input--small-width survey__input--card"
           />
           <app-delete-btn (delete)="clearSurveyDatum.emit()"></app-delete-btn>
@@ -62,7 +63,9 @@
       <div class="create-survey__input-row">
         <textarea
           [formControl]="descriptionControl()"
+          maxlength="400"
           class="survey__textarea--card survey__input--standard-width"
+          (blur)="trimToMaxLength(descriptionControl(), 400)"
         ></textarea>
         <app-delete-btn (delete)="clearSurveyDesctiption.emit()"></app-delete-btn>
       </div>

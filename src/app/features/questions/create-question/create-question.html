@@ -6,8 +6,9 @@
     </div>
     <input
       type="text"
+      maxlength="100"
       class="survey__input--standard-width survey__input--card"
-      (blur)="showErrorMsg()"
+      (blur)="trimQuestionToMaxLength(); showErrorMsg()"
       (input)="showErrorMsg()"
       [formControl]="getTextControl()"
     />

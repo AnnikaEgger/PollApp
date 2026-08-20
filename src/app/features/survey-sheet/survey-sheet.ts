@@ -32,12 +32,16 @@ export class SurveySheet {
     }
   }
 
-  /** Returns the published or draft status label. */
+  /** Returns the published or draft status label.
+   * @returns The survey status label.
+   */
   getPublishLabel(): string {
     return this.surveyDetails()?.published ? 'Published' : 'Draft';
   }
 
-  /** Formats the survey end date for display. */
+  /** Formats the survey end date for display.
+   * @returns The formatted end date, or null when no date exists.
+   */
   formatEndDate() {
     const serverDate = this.surveyDetails()?.end_date;
     if (!serverDate) {
@@ -51,7 +55,9 @@ export class SurveySheet {
     }).format(date);
   }
 
-  /** Forwards a local answer selection to the survey page. */
+  /** Forwards a local answer selection to the survey page.
+   * @param event The selection change event.
+   */
   async handleSelection(event: { questionId: string; optionIds: string[] }) {
     this.selectionChanged.emit(event);
   }

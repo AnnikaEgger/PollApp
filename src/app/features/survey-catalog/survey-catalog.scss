@@ -16,6 +16,7 @@ h3 {
 .landing-page__active-cards {
   @include grid-two-columns;
   max-height: 450px;
+  min-height: 200px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {

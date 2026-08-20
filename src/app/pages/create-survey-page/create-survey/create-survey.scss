@@ -1,15 +1,21 @@
 @use '../../../../styles/abstracts/mixins' as *;
 
 .create-survey-dialog {
-  border: none;
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  min-height: 100dvh;
-  height: auto;
-  z-index: 999;
-  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  position: relative;
+  margin: auto;
+  height: fit-content;
+  background-color: transparent;
+}
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
 }
 
 .create-survey {
@@ -18,7 +24,7 @@
     color: var(--color-bg-card-dropdown);
     padding: 20px 40px;
     border-radius: 5px 100px 5px 5px;
-    margin: 20px 0;
+    margin: 72px 0;
   }
 
   &__badge {

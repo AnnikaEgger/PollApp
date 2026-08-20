@@ -31,7 +31,10 @@ export class SurveyService {
     }
   }
 
-  /** Loads one survey by its identifier. */
+  /** Loads one survey by its identifier.
+   * @param id The survey identifier.
+   * @returns The survey row, or null when loading fails.
+   */
   async getSingleSurvey(id: string) {
     try {
       let { data: survey, error } = await supabase
@@ -48,7 +51,10 @@ export class SurveyService {
     }
   }
 
-  /** Inserts a published survey and returns the created row. */
+  /** Inserts a published survey and returns the created row.
+   * @param survey The survey data to insert.
+   * @returns The created survey row, when insertion succeeds.
+   */
   async insertSurvey(survey: any) {
     try {
       const { data, error } = await supabase
@@ -65,7 +71,10 @@ export class SurveyService {
     }
   }
 
-  /** Selects the fields required for a published survey row. */
+  /** Selects the fields required for a published survey row.
+   * @param survey The survey data.
+   * @returns The database survey payload.
+   */
   private toSurveyRow(survey: any) {
     return {
       title: survey.title,

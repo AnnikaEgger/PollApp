@@ -5,9 +5,10 @@
         <span class="create-survey__option-label">{{ getLetter(i) }}.</span>
         <input
           type="text"
+          maxlength="100"
           class="survey__input--medium-width survey__input--card"
           [formControl]="getTextControl(o)"
-          (blur)="showErrorMsg(i)"
+          (blur)="trimOptionToMaxLength(i); showErrorMsg(i)"
           (input)="showErrorMsg(i)"
         />
         <app-delete-btn (delete)="onDeleteOption(i)"></app-delete-btn>

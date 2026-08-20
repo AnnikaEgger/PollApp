@@ -31,16 +31,20 @@ export class CreateSurveyPage {
   isPublishedOverlayOpen: boolean = false;
   isSubmittingSurvey: boolean = false;
   lastCreatedSurveyId: number | null = null;
-  /** Creates the survey page with change detection support. */
+  /** Creates the survey page with change detection support.
+   * @param cd The change detector reference.
+   */
   constructor(private cd: ChangeDetectorRef) {}
   @ViewChild('createSurvey') createSurveyComponent!: CreateSurvey;
   @ViewChildren(CreateQuestion) questionComponents!: QueryList<CreateQuestion>;
 
   surveyForm = new FormGroup({
     title: new FormControl('', {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.maxLength(60)],
     }),
-    description: new FormControl(''),
+    description: new FormControl('', {
+      validators: [Validators.maxLength(400)],
+    }),
     end_date: new FormControl(''),
     is_published: new FormControl(false),
     category: new FormControl('', {
@@ -54,7 +58,9 @@ export class CreateSurveyPage {
     this.addQuestion();
   }
 
-  /** Returns the survey question form array. */
+  /** Returns the survey question form array.
+   * @returns The survey question form array.
+   */
   get questionsArr() {
     return this.surveyForm.get('questions') as FormArray;
   }
@@ -63,7 +69,7 @@ export class CreateSurveyPage {
   addQuestion() {
     const question = new FormGroup({
       order_index: new FormControl(this.questionsArr.length + 1),
-      text: new FormControl('', Validators.required),
+      text: new FormControl('', [Validators.required, Validators.maxLength(100)]),
       multiple_answers_allowed: new FormControl(false),
       options: new FormArray([]),
     });
@@ -73,7 +79,9 @@ export class CreateSurveyPage {
     this.addOption(questionIndex);
   }
 
-  /** Deletes a question or clears the only remaining question. */
+  /** Deletes a question or clears the only remaining question.
+   * @param index The question index to delete.
+   */
   deleteQuestion(index: number) {
     if (this.questionsArr.length <= 1) {
       const question = this.questionsArr.at(index);
@@ -86,24 +94,32 @@ export class CreateSurveyPage {
     });
   }
 
-  /** Returns the option form array for a question. */
+  /** Returns the option form array for a question.
+   * @param questionIndex The question index.
+   * @returns The question's options form array.
+   */
   getOptionsArr(questionIndex: number) {
     return this.questionsArr.at(questionIndex).get('options') as FormArray;
   }
 
-  /** Adds an option unless the maximum has been reached. */
+  /** Adds an option unless the maximum has been reached.
+   * @param questionIndex The question index receiving the option.
+   */
   addOption(questionIndex: number) {
     const optionsArr = this.getOptionsArr(questionIndex);
     if (optionsArr.length >= 6) return;
     const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
     const option = new FormGroup({
-      text: new FormControl('', Validators.required),
+      text: new FormControl('', [Validators.required, Validators.maxLength(100)]),
       order_index: new FormControl(alphabet[optionsArr.length]),
     });
     optionsArr.push(option);
   }
 
-  /** Deletes an option or clears the final required options. */
+  /** Deletes an option or clears the final required options.
+   * @param questionIndex The question index containing the option.
+   * @param optionIndex The option index to delete.
+   */
   deleteOption(questionIndex: number, optionIndex: number) {
     const optionsArr = this.getOptionsArr(questionIndex);
     const alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -139,11 +155,14 @@ export class CreateSurveyPage {
       this.cd.detectChanges();
       setTimeout(() => {
         this.redirectToSurveyDetails(this.lastCreatedSurveyId!);
+        this.surveyService.dialogIsOpen.set(false);
       }, 1000);
     }, 350);
   }
 
-  /** Returns whether the survey form can be submitted. */
+  /** Returns whether the survey form can be submitted.
+   * @returns Whether the survey form is valid for submission.
+   */
   private canSubmitSurvey(): boolean {
     if (this.surveyForm.valid && this.titleControl.value?.trim()) return true;
     this.surveyForm.markAllAsTouched();
@@ -151,7 +170,10 @@ export class CreateSurveyPage {
     return false;
   }
 
-  /** Normalizes optional survey values for persistence. */
+  /** Normalizes optional survey values for persistence.
+   * @param value The raw survey form value.
+   * @returns The normalized survey payload.
+   */
   private normalizeSurveyPayload(value: any) {
     return {
       ...value,
@@ -160,7 +182,10 @@ export class CreateSurveyPage {
     };
   }
 
-  /** Inserts every question belonging to a newly created survey. */
+  /** Inserts every question belonging to a newly created survey.
+   * @param questions The questions to insert.
+   * @param surveyId The ID of the newly created survey.
+   */
   private async insertQuestions(questions: any[], surveyId: number) {
     for (let index = 0; index < questions.length; index++) {
       await this.questionService.insertQuestion(
@@ -169,7 +194,12 @@ export class CreateSurveyPage {
     }
   }
 
-  /** Converts a form question into the service insert shape. */
+  /** Converts a form question into the service insert shape.
+   * @param question The raw form question.
+   * @param surveyId The ID of the survey receiving the question.
+   * @param index The question's zero-based index.
+   * @returns The question payload for the service.
+   */
   private toQuestionPayload(question: any, surveyId: number, index: number): QuestionInsert {
     return {
       survey_id: surveyId.toString(),
@@ -190,7 +220,9 @@ export class CreateSurveyPage {
     this.redirectToSurveyDetails(this.lastCreatedSurveyId!);
   }
 
-  /** Navigates to a survey detail page. */
+  /** Navigates to a survey detail page.
+   * @param id The survey ID to open.
+   */
   redirectToSurveyDetails(id: number) {
     this.router.navigate(['/survey', id]);
   }
@@ -214,7 +246,10 @@ export class CreateSurveyPage {
     });
   }
 
-  /** Returns the options form array from a question control. */
+  /** Returns the options form array from a question control.
+   * @param q The question form control.
+   * @returns The question's options form array.
+   */
   getOptions(q: AbstractControl): FormArray {
     return q.get('options') as FormArray;
   }
@@ -234,29 +269,39 @@ export class CreateSurveyPage {
     this.surveyForm.get('description')!.setValue('');
   }
 
-  /** Returns tomorrow as a date-input-compatible value. */
+  /** Returns tomorrow as a date-input-compatible value.
+   * @returns Tomorrow's date in ISO format.
+   */
   private getTomorrowDate(): string {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     return tomorrow.toISOString().split('T')[0];
   }
 
-  /** Returns the survey title control. */
+  /** Returns the survey title control.
+   * @returns The survey title form control.
+   */
   get titleControl(): FormControl {
     return this.surveyForm.get('title') as FormControl;
   }
 
-  /** Returns the survey end-date control. */
+  /** Returns the survey end-date control.
+   * @returns The survey end-date form control.
+   */
   get datumControl(): FormControl {
     return this.surveyForm.get('end_date') as FormControl;
   }
 
-  /** Returns the survey description control. */
+  /** Returns the survey description control.
+   * @returns The survey description form control.
+   */
   get descriptionControl(): FormControl {
     return this.surveyForm.get('description') as FormControl;
   }
 
-  /** Returns the survey category control. */
+  /** Returns the survey category control.
+   * @returns The survey category form control.
+   */
   get categoryControl(): FormControl {
     return this.surveyForm.get('category') as FormControl;
   }

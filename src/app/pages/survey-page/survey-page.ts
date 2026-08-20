@@ -72,7 +72,9 @@ export class SurveyPage {
     }
   }
 
-  /** Updates the expired state from a survey end date. */
+  /** Updates the expired state from a survey end date.
+   * @param endDate The survey end date.
+   */
   private computeIsPast(endDate: string) {
     if (!endDate) {
       this.isPastSurvey = false;
@@ -85,18 +87,25 @@ export class SurveyPage {
     this.isPastSurvey = end < today;
   }
 
-  /** Returns options belonging to a question. */
+  /** Returns options belonging to a question.
+   * @param qId The question identifier.
+   * @returns The question options.
+   */
   optionsForQuestion(qId: number | string) {
     const question = this.questions().find((q) => q.id == qId);
     return question?.options ?? [];
   }
 
-  /** Indicates whether persisted votes exist. */
+  /** Indicates whether persisted votes exist.
+   * @returns Whether persisted votes exist.
+   */
   hasVotes() {
     return this.questions().some((q) => q.options?.some((o: any) => (o.vote_count || 0) > 0));
   }
 
-  /** Indicates whether local selections exist. */
+  /** Indicates whether local selections exist.
+   * @returns Whether local selections exist.
+   */
   hasLocalVotes() {
     for (const optionIds of this.answers().values()) {
       if (optionIds.length > 0) return true;
@@ -104,10 +113,27 @@ export class SurveyPage {
     return false;
   }
 
+  /** Indicates whether every question has at least one selected option.
+   * @returns Whether every question has a selected option.
+   */
+  hasAnsweredEveryQuestion() {
+    const questions = this.questions();
+    return (
+      questions.length > 0 &&
+      questions.every((question) => (this.answers().get(question.id)?.length ?? 0) > 0)
+    );
+  }
+
   /** Persists the current selections and marks this browser as completed. */
   async completeSurvey() {
     const surveyId = this.route.snapshot.paramMap.get('id')!;
-    if (!surveyId || this.isSubmittingSurvey || this.userHasVoted) return;
+    if (
+      !surveyId ||
+      this.isSubmittingSurvey ||
+      this.userHasVoted ||
+      !this.hasAnsweredEveryQuestion()
+    )
+      return;
 
     this.isSubmittingSurvey = true;
     const wasPersisted = await this.persistAnswers();
@@ -121,7 +147,9 @@ export class SurveyPage {
     this.isSurveySubmitted = true;
   }
 
-  /** Sends every non-empty local answer to the vote service. */
+  /** Sends every non-empty local answer to the vote service.
+   * @returns Whether all local answers were persisted.
+   */
   private async persistAnswers(): Promise<boolean> {
     for (const [questionId, letters] of this.answers().entries()) {
       if (letters.length > 0) {

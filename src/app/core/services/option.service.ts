@@ -9,7 +9,10 @@ export class OptionService {
   questionService = inject(QuestionService);
   questions = this.questionService.questions;
 
-  /** Loads options for one question. */
+  /** Loads options for one question.
+   * @param questionId The question identifier.
+   * @returns The question options.
+   */
   async getOptionsForQuestion(questionId: string): Promise<Option[]> {
     const { data, error } = await supabase
       .from('questions')
@@ -25,7 +28,9 @@ export class OptionService {
     return data?.options ?? [];
   }
 
-  /** Loads and normalizes every option belonging to a survey. */
+  /** Loads and normalizes every option belonging to a survey.
+   * @param surveyId The survey identifier.
+   */
   async getOptionsForSurvey(surveyId: string): Promise<void> {
     try {
       const { data, error } = await this.fetchSurveyOptions(surveyId);
@@ -42,12 +47,19 @@ export class OptionService {
     }
   }
 
-  /** Fetches all question option arrays for a survey. */
+  /** Fetches all question option arrays for a survey.
+   * @param surveyId The survey identifier.
+   * @returns The Supabase query for survey options.
+   */
   private fetchSurveyOptions(surveyId: string) {
     return supabase.from('questions').select('options').eq('survey_id', surveyId);
   }
 
-  /** Appends an option to a question and persists the updated option list. */
+  /** Appends an option to a question and persists the updated option list.
+   * @param optionText The option text.
+   * @param questionId The question identifier.
+   * @returns Whether the updated options were persisted.
+   */
   async insertOptions(optionText: string, questionId: number): Promise<boolean> {
     try {
       const options = await this.fetchQuestionOptions(questionId);
@@ -60,7 +72,10 @@ export class OptionService {
     }
   }
 
-  /** Maps database options to stable lettered option values. */
+  /** Maps database options to stable lettered option values.
+   * @param questions The question rows containing options.
+   * @returns The flattened, lettered options.
+   */
   private mapOptions(questions: any[]): Option[] {
     return questions
       .flatMap((q) => q.options ?? [])
@@ -70,7 +85,10 @@ export class OptionService {
       })) as Option[];
   }
 
-  /** Fetches the current options for one question. */
+  /** Fetches the current options for one question.
+   * @param questionId The question identifier.
+   * @returns The current options, or null when loading fails.
+   */
   private async fetchQuestionOptions(questionId: number): Promise<any[] | null> {
     const { data, error } = await supabase
       .from('questions')
@@ -81,7 +99,11 @@ export class OptionService {
     return error ? null : (data?.options ?? []);
   }
 
-  /** Persists a question's complete option list. */
+  /** Persists a question's complete option list.
+   * @param questionId The question identifier.
+   * @param options The complete option list.
+   * @returns Whether the options were persisted.
+   */
   private async updateQuestionOptions(questionId: number, options: any[]): Promise<boolean> {
     const { error } = await supabase.from('questions').update({ options }).eq('id', questionId);
     if (error) console.error('Supabase error at insertOptions (update):', error);

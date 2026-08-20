@@ -65,6 +65,12 @@
     }
   }
 
+  &__validation-message {
+    color: var(--color-orange-primary);
+    font-family: var(--font-text-medium);
+    text-align: center;
+  }
+
   &__placeholder,
   &__live-results {
     font-family: var(--font-text-medium);

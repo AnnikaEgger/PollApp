@@ -21,14 +21,18 @@ export class DropdownMenu {
     this.isCategoriesOpen = !this.isCategoriesOpen;
   }
 
-  /** Stops propagation and toggles the dropdown from its trigger. */
+  /** Stops propagation and toggles the dropdown from its trigger.
+   * @param event The trigger click event.
+   */
   onTriggerClick(event: MouseEvent) {
     event.stopPropagation();
     this.toggleDropdown();
   }
 
   @HostListener('document:click', ['$event'])
-  /** Closes the dropdown when a click occurs outside it. */
+  /** Closes the dropdown when a click occurs outside it.
+   * @param event The document click event.
+   */
   handleOutsideClick(event: Event) {
     const target = event.target as HTMLElement;
     const clickedInside = this.dropdownRef()?.nativeElement.contains(target);
@@ -37,7 +41,9 @@ export class DropdownMenu {
     }
   }
 
-  /** Selects a category and updates its form control. */
+  /** Selects a category and updates its form control.
+   * @param option The selected category.
+   */
   select(option: string) {
     this.valueChange.emit(option);
     const control = this.control();

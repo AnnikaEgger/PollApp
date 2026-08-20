@@ -53,6 +53,8 @@
 
   &__trigger {
     width: 250px;
+    padding: 4px 6px;
+    margin-bottom: 4px;
 
     &.open .dropdown__icon {
       transform: rotate(180deg);

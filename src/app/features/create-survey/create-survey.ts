@@ -30,6 +30,17 @@ export class CreateSurvey {
     this.isVisible = !control?.value?.trim();
   }
 
+  /** Truncates pasted text to the field's configured maximum length.
+   * @param control The form control to truncate.
+   * @param maxLength The maximum number of characters.
+   */
+  trimToMaxLength(control: FormControl, maxLength: number) {
+    const value = control.value;
+    if (typeof value === 'string' && value.length > maxLength) {
+      control.setValue(value.slice(0, maxLength));
+    }
+  }
+
   /** Clears the survey-name validation state. */
   resetSurveyNameErr() {
     this.isVisible = false;
@@ -41,7 +52,9 @@ export class CreateSurvey {
     this.categoryErrorVisible = false;
   }
 
-  /** Updates the selected category and clears its error state. */
+  /** Updates the selected category and clears its error state.
+   * @param value The newly selected category.
+   */
   onCategorySelected(value: string | null) {
     this.selectedCategory = value;
     if (value) {

@@ -8,7 +8,9 @@ export class QuestionService {
   questions = signal<Question[]>([]);
   questionChannel: RealtimeChannel | null = null;
 
-  /** Loads questions for a survey and assigns display numbers. */
+  /** Loads questions for a survey and assigns display numbers.
+   * @param surveyId The survey identifier.
+   */
   async getQuestionsForSurvey(surveyId: string) {
     try {
       let { data: questions, error } = await supabase
@@ -26,7 +28,10 @@ export class QuestionService {
     }
   }
 
-  /** Inserts one question with normalized, lettered options. */
+  /** Inserts one question with normalized, lettered options.
+   * @param question The question to insert.
+   * @returns The inserted question row, or null when insertion fails.
+   */
   async insertQuestion(question: QuestionInsert) {
     try {
       const { data, error } = await supabase
@@ -44,7 +49,10 @@ export class QuestionService {
     }
   }
 
-  /** Updates persisted vote counts for selected options. */
+  /** Updates persisted vote counts for selected options.
+   * @param questionId The question identifier.
+   * @param selectedLetters The selected option letters.
+   */
   async updateVotesForQuestion(questionId: string, selectedLetters: string[]) {
     try {
       const { data, error } = await supabase
@@ -62,7 +70,11 @@ export class QuestionService {
     }
   }
 
-  /** Adds one vote to each selected option. */
+  /** Adds one vote to each selected option.
+   * @param options The options to update.
+   * @param selectedLetters The selected option letters.
+   * @returns The options with updated vote counts.
+   */
   private applyVotes(options: any[], selectedLetters: string[]) {
     return options.map((option, index) => ({
       ...option,
@@ -73,12 +85,18 @@ export class QuestionService {
     }));
   }
 
-  /** Adds display numbers to questions returned by Supabase. */
+  /** Adds display numbers to questions returned by Supabase.
+   * @param questions The questions to number.
+   * @returns The numbered questions.
+   */
   private numberQuestions(questions: any[]): Question[] {
     return questions.map((question, index) => ({ ...question, number: index + 1 })) as Question[];
   }
 
-  /** Converts an application question into the database insert shape. */
+  /** Converts an application question into the database insert shape.
+   * @param question The application question.
+   * @returns The database question payload.
+   */
   private toDatabaseQuestion(question: QuestionInsert) {
     return {
       ...question,
