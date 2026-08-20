@@ -15,11 +15,15 @@
 
 .survey-content {
   @include flex-space-btw;
-  gap: 40px;
+  gap: 64px;
   align-items: stretch;
 }
 
 .survey {
+  &__votes {
+    flex: 1;
+  }
+
   &__results {
     flex: 1;
     @include flex-column-space-btw;
@@ -115,8 +119,9 @@
 .submitting-overlay,
 .submitted-overlay {
   position: fixed;
-  bottom: 50px;
-  right: 50px;
+  top: 50dvh;
+  left: 50dvw;
+  transform: translate(-50%, -50%);
   opacity: 0;
   padding: 0;
   pointer-events: none;

@@ -24,7 +24,7 @@
     color: var(--color-bg-card-dropdown);
     padding: 20px 40px;
     border-radius: 5px 100px 5px 5px;
-    margin: 72px 0;
+    margin-top: 48px;
   }
 
   &__badge {
@@ -99,9 +99,20 @@
   justify-self: flex-end;
   gap: 0px;
 
+  &::after {
+    width: 0;
+  }
+
+  &--valid:hover {
+    gap: 0.5rem;
+
+    &::after {
+      width: 18px;
+    }
+  }
+
   &:hover {
     background-color: var(--color-orange-primary);
-    gap: 0.5rem;
   }
 
   &:disabled {
@@ -118,8 +129,9 @@
 
 .submitting-overlay {
   position: fixed;
-  bottom: 50px;
-  right: 50px;
+  top: 50dvh;
+  left: 50dvw;
+  transform: translate(-50%, -50%);
   opacity: 0;
   padding: 0;
   pointer-events: none;
@@ -176,8 +188,9 @@
 
 .published-overlay {
   position: fixed;
-  bottom: 50px;
-  right: 50px;
+  top: 50dvh;
+  left: 50dvw;
+  transform: translate(-50%, -50%);
   opacity: 0;
   padding: 0;
   pointer-events: none;

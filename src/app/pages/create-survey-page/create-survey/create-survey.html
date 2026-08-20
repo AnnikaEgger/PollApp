@@ -72,6 +72,7 @@
           <button
             (click)="submitSurvey()"
             class="create-survey__publish-btn btn btn-primary btn--icon-check"
+            [class.create-survey__publish-btn--valid]="surveyForm.valid"
           >
             Publish
           </button>

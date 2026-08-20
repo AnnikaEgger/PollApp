@@ -40,9 +40,6 @@
       </div>
 
       <div class="create-survey__dropdown">
-        <p class="error_msg error_msg--category" [class.error_msg--visible]="categoryErrorVisible">
-          Category is required!
-        </p>
         <app-dropdown
           label="Choose category"
           [options]="categories"
@@ -50,6 +47,9 @@
           [(value)]="selectedCategory"
           (valueChange)="onCategorySelected($event)"
         ></app-dropdown>
+        <p class="error_msg error_msg--category" [class.error_msg--visible]="categoryErrorVisible">
+          Category is required!
+        </p>
       </div>
     </div>
   </div>

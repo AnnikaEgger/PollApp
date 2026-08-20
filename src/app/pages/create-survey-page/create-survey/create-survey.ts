@@ -136,6 +136,7 @@ export class CreateSurveyPage {
 
   /** Validates and persists the complete survey. */
   async submitSurvey() {
+    this.showAllCustomErrors();
     if (!this.datumControl.value) this.datumControl.setValue(this.getTomorrowDate());
     if (!this.canSubmitSurvey()) return;
     this.isSubmittingSurvey = true;
