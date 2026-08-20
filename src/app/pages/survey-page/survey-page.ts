@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { SurveySheet } from '../../features/survey-sheet/survey-sheet';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { VoteService } from '../../core/services/vote.service';
@@ -15,6 +15,10 @@ import { CreateSurveyPage } from '../create-survey-page/create-survey/create-sur
   styleUrl: './survey-page.scss',
 })
 export class SurveyPage {
+  @ViewChild('submittedOverlay') submittedOverlay?: ElementRef<HTMLElement>;
+  private readonly minimumSubmittingDuration = 1200;
+  private readonly submissionOverlayDuration = 3000;
+  private submissionOverlayTimeout?: ReturnType<typeof setTimeout>;
   private route = inject(ActivatedRoute);
   questionService = inject(QuestionService);
   voteService = inject(VoteService);
@@ -124,27 +128,67 @@ export class SurveyPage {
     );
   }
 
-  /** Persists the current selections and marks this browser as completed. */
+  /** Persists the current selections and marks this browser as completed.
+   * @returns A promise that resolves when submission handling is complete.
+   */
   async completeSurvey() {
-    const surveyId = this.route.snapshot.paramMap.get('id')!;
-    if (
-      !surveyId ||
-      this.isSubmittingSurvey ||
-      this.userHasVoted ||
-      !this.hasAnsweredEveryQuestion()
-    )
-      return;
-
+    const surveyId = this.route.snapshot.paramMap.get('id');
+    if (!surveyId || !this.canCompleteSurvey(surveyId)) return;
     this.isSubmittingSurvey = true;
-    const wasPersisted = await this.persistAnswers();
+    const wasPersisted = await this.submitAnswersWithMinimumDuration();
     this.isSubmittingSurvey = false;
     if (!wasPersisted) return;
+    await this.finishSurveySubmission(surveyId);
+  }
 
+  /** Checks whether the current survey can be submitted.
+   * @param surveyId The current survey identifier.
+   * @returns Whether submission is currently allowed.
+   */
+  private canCompleteSurvey(surveyId: string): boolean {
+    return (
+      surveyId.length > 0 &&
+      !this.isSubmittingSurvey &&
+      !this.userHasVoted &&
+      this.hasAnsweredEveryQuestion()
+    );
+  }
+
+  /** Persists answers while keeping the submitting overlay readable.
+   * @returns Whether all answers were persisted.
+   */
+  private async submitAnswersWithMinimumDuration(): Promise<boolean> {
+    const submissionStartedAt = Date.now();
+    const wasPersisted = await this.persistAnswers();
+    await this.waitForMinimumSubmittingDuration(submissionStartedAt);
+    return wasPersisted;
+  }
+
+  /** Updates the page after a successful submission.
+   * @param surveyId The current survey identifier.
+   * @returns A promise that resolves when the submission state is updated.
+   */
+  private async finishSurveySubmission(surveyId: string): Promise<void> {
     localStorage.setItem(`survey_voted_${surveyId}`, 'true');
     this.userHasVoted = true;
     this.answers.set(new Map<string, string[]>());
     await this.questionService.getQuestionsForSurvey(surveyId);
     this.isSurveySubmitted = true;
+    this.submissionOverlayTimeout = setTimeout(() => {
+      this.submittedOverlay?.nativeElement.style.setProperty('display', 'none');
+      this.closeSubmissionOverlay();
+    }, this.submissionOverlayDuration);
+  }
+
+  /** Keeps the submitting feedback visible long enough to be read.
+   * @param startedAt The timestamp when submission started.
+   * @returns A promise that resolves after the minimum display duration.
+   */
+  private async waitForMinimumSubmittingDuration(startedAt: number): Promise<void> {
+    const remainingDuration = this.minimumSubmittingDuration - (Date.now() - startedAt);
+    if (remainingDuration > 0) {
+      await new Promise((resolve) => setTimeout(resolve, remainingDuration));
+    }
   }
 
   /** Sends every non-empty local answer to the vote service.
@@ -162,6 +206,7 @@ export class SurveyPage {
 
   /** Closes the submission feedback overlay. */
   closeSubmissionOverlay() {
+    clearTimeout(this.submissionOverlayTimeout);
     this.isSurveySubmitted = false;
   }
 
