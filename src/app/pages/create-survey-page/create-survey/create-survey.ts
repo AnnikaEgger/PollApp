@@ -231,6 +231,7 @@ export class CreateSurveyPage {
   /** Resets and closes the create-survey modal. */
   closeCreateSurveyModal() {
     this.surveyForm.reset();
+    this.surveyService.dialogIsOpen.set(false);
     this.createSurveyComponent.resetSurveyNameErr();
     this.createSurveyComponent.resetCategory();
     this.questionComponents.forEach((cmp) => {
